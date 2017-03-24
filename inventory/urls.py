@@ -18,4 +18,6 @@ from . import views
 
 urlpatterns = [
      url(r'^$', views.inv_list, name='inv_list'),
+     url(r'^$', views.inv_list, name='inv_list'),
+     url(r'^inventory/(?P<id>[0-9])/$', views.inventory),
 ]

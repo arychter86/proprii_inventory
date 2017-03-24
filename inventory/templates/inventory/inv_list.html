@@ -1,5 +1,9 @@
+{% load staticfiles %}
 <html>
     <head>
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+         <link rel="stylesheet" href="{% static 'css/proprii.css' %}">
         <title>Tree Inventory</title>
     </head>
     <body>
@@ -8,15 +12,39 @@
         </div>
 
         <div>
-            <p>published: 14.06.2014, 12:14</p>
-            <h2><a href="">My first post</a></h2>
-            <p>Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-        </div>
 
-        <div>
-            <p>published: 14.06.2014, 12:14</p>
-            <h2><a href="">My second post</a></h2>
-            <p>Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut f.</p>
+          <table class="table table-striped">
+            <thead>
+             <tr>
+               <th>id</th>
+               <th>Name</th>
+               <th>City</th>
+               <th>Street</th>
+               <th>Code</th>
+               <th>Date</th>
+               <th>Edit</th>
+             </tr>
+            </thead>
+            <tbody>
+              {% for inventory in inventorys %}
+
+                <span>
+                  <tr>
+                    <td>{{inventory.id}}</td>
+                    <td>{{inventory.name}}</td>
+                    <td>{{inventory.city}}</td>
+                    <td>{{inventory.street}}</td>
+                    <td>{{inventory.code}}</td>
+                    <td>{{inventory.date}}</td>
+                    <td>  <a href="../inventory/{{inventory.id}}/"> Click </a></td>
+                  </tr>
+                </span>
+              
+             {% endfor %}
+
+            </tbody>
+          </table>
+
         </div>
     </body>
 </html>
