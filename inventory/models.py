@@ -1,7 +1,8 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
-
+from django.forms import ModelForm
+from django.utils.translation import ugettext_lazy as _
 
 
 class Tree(models.Model):
@@ -27,3 +28,19 @@ class Inventory(models.Model):
     client_name = models.CharField(max_length=200)
     def __str__(self):
         return self.name + ", klient: " + self.client_name + ", data: " + str(self.created_date)
+
+class InventoryForm(ModelForm):
+    class Meta:
+        model = Inventory
+        fields = ['author', 'name', 'city', 'street', 'code', 'created_date', 'client_name']
+        labels = {
+            'author': _('Author'),
+        }
+        help_texts = {
+            'name': _('Choose Author.'),
+        }
+        error_messages = {
+            'name': {
+                'max_length': _("This authors's name is too long."),
+            },
+        }

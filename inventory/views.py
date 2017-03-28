@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from .models import Inventory
+from .models import Inventory, InventoryForm
+from django.forms import modelformset_factory
 
 # Create your views here.
 def inv_list(request):
@@ -8,8 +9,25 @@ def inv_list(request):
 
 
 def inventory(request,id):
-    try:
+
+    if id:
         inventory = Inventory.objects.get(id=id)
-    except Inventory.DoesNotExist:
+    else:
         inventory = None
-    return render(request, 'inventory/inventory.html', {'inventory':inventory})
+
+    if request.method == 'POST':
+        form = InventoryForm(request.POST, request.FILES, instance=inventory)
+        if form.is_valid():
+            form.save()
+            # do something.
+            return inv_list(request)
+    else:
+        try:
+            inventory = Inventory.objects.get(id=id)
+            form = InventoryForm(instance=inventory)
+        except Inventory.DoesNotExist:
+            inventory = None
+            form =  InventoryForm()
+
+
+    return render(request, 'inventory/inventory.html', {'form': form})
