@@ -10,24 +10,29 @@ def inv_list(request):
 
 def inventory(request,id):
 
-    if id:
-        inventory = Inventory.objects.get(id=id)
-    else:
-        inventory = None
+    try:
+        inv_obj = Inventory.objects.get(id=id)
+    except Inventory.DoesNotExist:
+        inv_obj = Inventory()
 
     if request.method == 'POST':
-        form = InventoryForm(request.POST, request.FILES, instance=inventory)
+        if inv_obj != None:
+            form = InventoryForm(request.POST, request.FILES, instance=inv_obj)
+        else:
+            form = InventoryForm(request.POST, request.FILES)
+            print(form.instance.id)
+            id = form.instance.id
+
         if form.is_valid():
             form.save()
-            # do something.
-            return inv_list(request)
-    else:
-        try:
-            inventory = Inventory.objects.get(id=id)
-            form = InventoryForm(instance=inventory)
-        except Inventory.DoesNotExist:
-            inventory = None
-            form =  InventoryForm()
+            # do something.\
+            id = form.instance.id
+            print('Saved')
 
+    try:
+        form = InventoryForm(instance=inv_obj)
+    except Inventory.DoesNotExist:
+        form =  InventoryForm()
+    form = form.as_ul()
 
-    return render(request, 'inventory/inventory.html', {'form': form})
+    return render(request, 'inventory/inventory.html', {'form': form,'id':id})

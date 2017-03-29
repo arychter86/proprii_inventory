@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
-from django.forms import ModelForm
+from django.forms import ModelForm, SplitDateTimeWidget
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -19,7 +19,7 @@ class Tree(models.Model):
 
 class Inventory(models.Model):
     author = models.ForeignKey('auth.User',null=True)
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
     street = models.CharField(max_length=100)
     code = models.CharField(max_length=10)
@@ -34,7 +34,7 @@ class InventoryForm(ModelForm):
         model = Inventory
         fields = ['author', 'name', 'city', 'street', 'code', 'created_date', 'client_name']
         labels = {
-            'author': _('Author'),
+            'author': _('Authorek'),
         }
         help_texts = {
             'name': _('Choose Author.'),
@@ -43,4 +43,7 @@ class InventoryForm(ModelForm):
             'name': {
                 'max_length': _("This authors's name is too long."),
             },
+        }
+        widgets = {
+            'created_date': SplitDateTimeWidget(),
         }

@@ -1,22 +1,8 @@
-{% load staticfiles %}
-<html>
-    <head>
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-         <link rel="stylesheet" href="{% static 'css/proprii.css' %}">
-        <title>Tree Inventory</title>
-    </head>
-    <body>
-        <div>
-            <h1><a href="">Tree Inventory</a></h1>
-        </div>
-
-
-        <form action="/inventory/{{form.instance.id}}/" method="post">
-            {% csrf_token %}
-            {{ form }}
-            <input type="submit" value="Submit" />
-        </form>
-
-      </body>
-</html>
+{% extends 'inventory/base.html' %}
+{% block content %}
+  <form action="/inventory/{{id}}/" method="post">
+      {% csrf_token %}
+      {{ form }}
+      <input type="submit" value="Submit" />
+  </form>
+{% endblock content %}
