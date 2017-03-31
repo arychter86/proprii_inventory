@@ -19,7 +19,7 @@ class Tree(models.Model):
 
 class Inventory(models.Model):
     author = models.ForeignKey('auth.User',null=True)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=200)
     city = models.CharField(max_length=100)
     street = models.CharField(max_length=100)
     code = models.CharField(max_length=10)
@@ -43,7 +43,4 @@ class InventoryForm(ModelForm):
             'name': {
                 'max_length': _("This authors's name is too long."),
             },
-        }
-        widgets = {
-            'created_date': SplitDateTimeWidget(),
         }

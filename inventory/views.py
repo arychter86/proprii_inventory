@@ -15,6 +15,11 @@ def inventory(request,id):
     except Inventory.DoesNotExist:
         inv_obj = Inventory()
 
+    try:
+        form = InventoryForm(instance=inv_obj)
+    except Inventory.DoesNotExist:
+        form =  InventoryForm()
+
     if request.method == 'POST':
         if inv_obj != None:
             form = InventoryForm(request.POST, request.FILES, instance=inv_obj)
@@ -28,11 +33,10 @@ def inventory(request,id):
             # do something.\
             id = form.instance.id
             print('Saved')
+        else:
+            print('Problem with saving', form.errors)
 
-    try:
-        form = InventoryForm(instance=inv_obj)
-    except Inventory.DoesNotExist:
-        form =  InventoryForm()
+
     form = form.as_ul()
 
     return render(request, 'inventory/inventory.html', {'form': form,'id':id})
