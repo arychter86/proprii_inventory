@@ -6,6 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class Tree(models.Model):
+    inventory = models.ForeignKey('Inventory',null=True)
     name = models.CharField(max_length=200)
     latin_name = models.CharField(max_length=200)
     height_m = models.IntegerField()
@@ -15,7 +16,12 @@ class Tree(models.Model):
             default=timezone.now)
 
     def __str__(self):
-        return name + " " + self.notes
+        return self.name + " " + self.notes
+
+class TreeForm(ModelForm):
+    class Meta:
+        model = Tree
+        fields = ['name', 'latin_name', 'height_m', 'circuit_cm', 'notes', 'created_date']
 
 class Inventory(models.Model):
     author = models.ForeignKey('auth.User',null=True)
@@ -26,6 +32,7 @@ class Inventory(models.Model):
     created_date = models.DateTimeField(
             default=timezone.now)
     client_name = models.CharField(max_length=200)
+
     def __str__(self):
         return self.name + ", klient: " + self.client_name + ", data: " + str(self.created_date)
 
