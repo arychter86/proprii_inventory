@@ -6,7 +6,16 @@
       <input type="submit" value="Submit" />
   </form>
 
+  <form method="post" action="">
+      <!-- Notice how the formset (below) and thus its submit button
+           is INSIDE the form (above) -->
+      {{ formset.management_form }}
+      <table>
+          {% for form in formset %}
+          {{ form.as_p  }}
+          {% endfor %}
+      </table>
+  </form>
 
-      {{ formset }}
 
 {% endblock content %}

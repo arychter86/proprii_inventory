@@ -40,7 +40,7 @@ def inventory(request,id):
 
     form = form.as_ul()
     trees = Tree.objects.filter(inventory =inv_obj ).values()
-    TreeFormSet = formset_factory(TreeForm)
+    TreeFormSet = formset_factory(TreeForm,extra=2, max_num=1)
     formset = TreeFormSet(initial=trees)
 
     return render(request, 'inventory/inventory.html', {'form': form,'formset':formset,'id':id})

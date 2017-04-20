@@ -22,6 +22,12 @@ class TreeForm(ModelForm):
     class Meta:
         model = Tree
         fields = ['name', 'latin_name', 'height_m', 'circuit_cm', 'notes', 'created_date']
+        labels = {
+            'name': _('Name'),
+        }
+        help_texts = {
+            'name': _('Choose polish name.'),
+        }
 
 class Inventory(models.Model):
     author = models.ForeignKey('auth.User',null=True)
