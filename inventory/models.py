@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
-from django.forms import ModelForm, SplitDateTimeWidget
+from django.forms import ModelForm, SplitDateTimeWidget, Textarea
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -27,6 +27,9 @@ class TreeForm(ModelForm):
         }
         help_texts = {
             'name': _('Choose polish name.'),
+        }
+        widgets = {
+            'notes': Textarea(attrs={'cols': 40, 'rows': 2}),
         }
 
 class Inventory(models.Model):
