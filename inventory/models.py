@@ -32,6 +32,17 @@ class TreeForm(ModelForm):
             'notes': Textarea(attrs={'cols': 40, 'rows': 2}),
         }
 
+class TreeImage(models.Model):
+    tree = models.ForeignKey('Tree',null=True)
+    description = models.CharField(max_length=200)
+    filename = models.CharField(max_length=200)
+    picture = models.ImageField(upload_to = 'photos/', default = 'pic_folder/None/no-img.jpg')
+    created_date = models.DateTimeField(
+            default=timezone.now)
+
+    def __str__(self):
+        return self.filename + " " + self.tree.name
+
 class Inventory(models.Model):
     author = models.ForeignKey('auth.User',null=True)
     name = models.CharField(max_length=200)

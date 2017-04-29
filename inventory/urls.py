@@ -15,6 +15,9 @@ Including another URLconf
 """
 from django.conf.urls import url
 from . import views
+from django.conf import settings
+
+# ... your normal urlpatterns here
 
 urlpatterns = [
      url(r'^$', views.inv_list, name='inv_list'),
