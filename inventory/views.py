@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 from .models import Inventory, InventoryForm, Tree, TreeForm
 from django.forms import modelformset_factory
 
@@ -7,7 +8,7 @@ def inv_list(request):
     inventorys = Inventory.objects.all()
     return render(request, 'inventory/inv_list.html', {'inventorys':inventorys})
 
-
+@login_required(login_url='/login/')
 def inventory(request,id):
 
     username = None
@@ -31,9 +32,12 @@ def inventory(request,id):
         if 'trees' in request.POST:
             TreeFormSet = modelformset_factory(Tree,TreeForm,extra=2)
             formset = TreeFormSet(request.POST, request.FILES)
-            print('Formset Saved')
+
             if formset.is_valid():
                 formset.save()
+                print('Formset Saved')
+            else:
+                print('Formset invalid, not saved!',formset.errors)
 
         elif 'inventory' in request.POST:
             if form.is_valid():

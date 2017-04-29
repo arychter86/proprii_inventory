@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class Tree(models.Model):
-    inventory = models.ForeignKey('Inventory',null=True)
+    inventory = models.ForeignKey('Inventory')
     name = models.CharField(max_length=200)
     latin_name = models.CharField(max_length=200)
     height_m = models.IntegerField()

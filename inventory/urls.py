@@ -16,11 +16,11 @@ Including another URLconf
 from django.conf.urls import url
 from . import views
 from django.conf import settings
-
+from django.contrib.auth import views as auth_views
 # ... your normal urlpatterns here
 
 urlpatterns = [
      url(r'^$', views.inv_list, name='inv_list'),
-     url(r'^$', views.inv_list, name='inv_list'),
      url(r'^inventory/(?P<id>[0-9]+)/$', views.inventory),
+      url(r'^login/$', auth_views.login, name='login'),
 ]
