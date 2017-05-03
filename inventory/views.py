@@ -20,6 +20,9 @@ def inventory(request,id):
     except Inventory.DoesNotExist:
         inv_obj = Inventory()
 
+    TreeFormSet = modelformset_factory(Tree, TreeForm,extra=0, can_delete=True)
+    formset = TreeFormSet(queryset=Tree.objects.filter(inventory = inv_obj ))
+
     if request.method == 'POST':
 
         if inv_obj != None:
@@ -30,11 +33,17 @@ def inventory(request,id):
             id = form.instance.id
 
         if 'trees' in request.POST:
-            TreeFormSet = modelformset_factory(Tree,TreeForm,extra=2)
+            TreeFormSet = modelformset_factory(Tree, TreeForm, extra=0, can_delete=True)
             formset = TreeFormSet(request.POST, request.FILES)
-
+            print(request.POST)
             if formset.is_valid():
-                formset.save()
+                instances = formset.save(commit=False)
+                for instance in formset.deleted_objects:
+                    instance.delete()
+                for instance in instances:
+                    instance.inventory = form.instance
+                    instance.save()
+                formset = TreeFormSet(queryset=Tree.objects.filter(inventory = inv_obj ))
                 print('Formset Saved')
             else:
                 print('Formset invalid, not saved!',formset.errors)
@@ -42,21 +51,16 @@ def inventory(request,id):
         elif 'inventory' in request.POST:
             if form.is_valid():
                 form.save()
-                # do something.\
+                # do something
                 id = form.instance.id
                 print('Inventory Data Saved')
             else:
                 print('Problem with saving', form.errors)
 
-
     try:
         form = InventoryForm(instance=inv_obj)
-        TreeFormSet = modelformset_factory(Tree, TreeForm,extra=2)
-        formset = TreeFormSet(queryset=Tree.objects.filter(inventory = inv_obj ))
+
     except Inventory.DoesNotExist:
         form =  InventoryForm()
-
-
-    form = form.as_ul()
 
     return render(request, 'inventory/inventory.html', {'form': form,'formset':formset,'id':id})
