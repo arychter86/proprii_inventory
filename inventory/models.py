@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
-from django.forms import ModelForm, SplitDateTimeWidget, Textarea, HiddenInput
+from django import forms
 from django.utils.translation import ugettext_lazy as _
 
 class Inventory(models.Model):
@@ -17,7 +17,7 @@ class Inventory(models.Model):
     def __str__(self):
         return self.name + ", klient: " + self.client_name + ", data: " + str(self.created_date)
 
-class InventoryForm(ModelForm):
+class InventoryForm(forms.ModelForm):
     class Meta:
         model = Inventory
         fields = ['author', 'name', 'city', 'street', 'code', 'created_date', 'client_name']
@@ -48,17 +48,16 @@ class Tree(models.Model):
     def __str__(self):
         return self.name + " " + self.notes
 
-class TreeForm(ModelForm):
+class TreeForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(TreeForm, self).__init__(*args, **kwargs)
         instance = getattr(self, 'instance', None)
-
         #if instance and instance.pk:
         #    self.fields['name'].widget.attrs['readonly'] = True
 
     class Meta:
         model = Tree
-        fields = ['name', 'latin_name', 'height_m', 'circuit_cm', 'crown_m', 'notes']
+        fields = ['id','inventory','name', 'latin_name', 'height_m', 'circuit_cm', 'crown_m', 'notes']
         labels = {
             'name': _('Name'),
         }
@@ -66,13 +65,7 @@ class TreeForm(ModelForm):
             'name': _('Choose polish name.'),
         }
         widgets = {
-            'name' : HiddenInput(),
-            'latin_name' : HiddenInput(),
-            'height_m' : HiddenInput(),
-            'circuit_cm' : HiddenInput(),
-            'crown_m' : HiddenInput(),
-            'notes' : HiddenInput(),
-            'notes': Textarea(attrs={'cols': 40, 'rows': 1}),
+            'notes': forms.Textarea(attrs={'cols': 40, 'rows': 1}),
         }
 
 class TreeImage(models.Model):

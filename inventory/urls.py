@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url
 from . import views
+from inventory.views import TreeView
 from django.conf import settings
 from django.contrib.auth import views as auth_views
 # ... your normal urlpatterns here
@@ -22,5 +23,8 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
      url(r'^$', views.inv_list, name='inv_list'),
      url(r'^inventory/(?P<id>[0-9]+)/$', views.inventory),
-      url(r'^login/$', auth_views.login, name='login'),
+     url(r'^login/$', auth_views.login, name='login'),
+     url(r'^inventory/(?P<id>[0-9]+)/tree/(?P<id_t>[0-9]+)/$', TreeView.as_view()),
+     url(r'^inventory/(?P<id>[0-9]+)/tree/$', TreeView.as_view()),
+     url(r'^inventory/(?P<id>[0-9]+)/tree/add/$', TreeView.as_view()),
 ]

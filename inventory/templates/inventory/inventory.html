@@ -16,7 +16,7 @@
               {% for form in formset.forms %}
                   {% if forloop.first %}
                     <thead>
-                      {% for field in form.visible_fields  %}
+                      {% for field in form  %}
                           <th>{{ field.label_tag }}</th>
                       {% endfor %}
                           <th>Edit</th>
@@ -30,6 +30,7 @@
                               {{ field }}
                             {% else %}
                               {{ field.value }}
+                              {{ field.as_hidden }}
                             {% endif %}
                           </td>
                       {% endfor %}
@@ -41,6 +42,7 @@
           </tbody>
       </table>
       <input type="submit" name="trees" value="Submit" />
+      <p class="deletelink-box"><a href="/inventory/{{id}}/tree/add/" class="deletelink">Add Tree</a></p>
   </form>
 
 {% endblock content %}

@@ -1,8 +1,9 @@
 from django.shortcuts import render
+from django.views.generic import View
 from django.contrib.auth.decorators import login_required
 from .models import Inventory, InventoryForm, Tree, TreeForm
 from django.forms import modelformset_factory
-
+from django.http import HttpResponseRedirect
 # Create your views here.
 def inv_list(request):
     inventorys = Inventory.objects.all()
@@ -43,6 +44,7 @@ def inventory(request,id):
                 for instance in instances:
                     instance.inventory = form.instance
                     instance.save()
+                    print(instance)
                 formset = TreeFormSet(queryset=Tree.objects.filter(inventory = inv_obj ))
                 print('Formset Saved')
             else:
@@ -64,3 +66,52 @@ def inventory(request,id):
         form =  InventoryForm()
 
     return render(request, 'inventory/inventory.html', {'form': form,'formset':formset,'id':id})
+
+
+class TreeView(View):
+    template_name = "inventory/tree.html"
+    username = None
+
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            username = request.user.username
+
+        id = kwargs.get('id')
+
+        if 'id_t' in kwargs:
+            id_t = kwargs.get('id_t')
+            tree_obj = Tree.objects.get(id=id_t)
+        else:
+            tree_obj = Tree()
+            setattr(tree_obj, 'inventory', Inventory.objects.get(id=id))
+
+
+        form = TreeForm(instance=tree_obj)
+        print(tree_obj.id)
+        return render(request, self.template_name, {'form': form,'id':id,'id_t':id_t})
+
+    def post(self, request, *args, **kwargs):
+        id = kwargs.get('id')
+
+        if 'id_t' in kwargs:
+            id_t = kwargs.get('id_t')
+            tree_obj = Tree.objects.get(id=id_t)
+            form = TreeForm(request.POST, request.FILES,instance=tree_obj)
+        else:
+            form = TreeForm(request.POST, request.FILES)
+
+        setattr(form.instance, 'inventory', Inventory.objects.get(id=id))
+
+        if 'delete' in request.POST:
+            tree_obj.delete()
+            return HttpResponseRedirect('/inventory/'+id)
+
+        if form.is_valid():
+            # <process form cleaned data>
+            instance = form.save(commit=False)
+            instance.inventory =  Inventory.objects.get(id=id)
+            instance.save()
+            print("Tree saved",instance)
+            form = TreeForm(instance=instance)
+        return HttpResponseRedirect('/inventory/'+id+'/tree/'+str(instance.id)+'/')
