@@ -37,11 +37,12 @@
                       {% for hidden in form.hidden_fields %}
                         {{ hidden }}
                       {% endfor %}
+                      <td><a href="/inventory/{{id}}/tree/{{form.id.value}}/"> Click </a></td>
                   </tr>
               {% endfor %}
           </tbody>
       </table>
-      <input type="submit" name="trees" value="Submit" />
+      <input type="submit" name="trees" value="Delete selected" />
       <p class="deletelink-box"><a href="/inventory/{{id}}/tree/add/" class="deletelink">Add Tree</a></p>
   </form>
 

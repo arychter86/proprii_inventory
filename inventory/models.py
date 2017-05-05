@@ -75,6 +75,19 @@ class TreeImage(models.Model):
     picture = models.ImageField(upload_to = 'photos/', default = 'pic_folder/None/no-img.jpg')
     created_date = models.DateTimeField(
             default=timezone.now)
-
     def __str__(self):
         return self.filename + " " + self.tree.name
+
+class TreeImageForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(TreeImageForm, self).__init__(*args, **kwargs)
+        instance = getattr(self, 'instance', None)
+        #if instance and instance.pk:
+        #    self.fields['name'].widget.attrs['readonly'] = True
+
+    class Meta:
+        model = TreeImage
+        fields = ['description','filename', 'picture', 'created_date']
+        labels = {
+            'description': _('Description'),
+        }

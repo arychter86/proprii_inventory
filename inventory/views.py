@@ -1,10 +1,12 @@
 from django.shortcuts import render
 from django.views.generic import View
 from django.contrib.auth.decorators import login_required
-from .models import Inventory, InventoryForm, Tree, TreeForm
+from .models import Inventory, InventoryForm, Tree, TreeForm, TreeImage, TreeImageForm
 from django.forms import modelformset_factory
 from django.http import HttpResponseRedirect
 # Create your views here.
+
+@login_required(login_url='/login/')
 def inv_list(request):
     inventorys = Inventory.objects.all()
     return render(request, 'inventory/inv_list.html', {'inventorys':inventorys})
@@ -76,28 +78,39 @@ class TreeView(View):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated():
             username = request.user.username
-
-        id = kwargs.get('id')
-
+        TreeImageFormSet = modelformset_factory(TreeImage, TreeImageForm, extra=0, can_delete=True)
+        if 'id' in kwargs:
+            id = kwargs.get('id')
         if 'id_t' in kwargs:
             id_t = kwargs.get('id_t')
-            tree_obj = Tree.objects.get(id=id_t)
+            tree_obj=Tree.objects.filter(id=id_t)
+            if tree_obj.count() > 0:
+                tree_obj = Tree.objects.get(id=id_t)
+                #retrieve images for tree_obj
+                t_imgs = TreeImage.objects.filter(tree = tree_obj)
+            else:
+                tree_obj = Tree()
+                #set inventory, there are no trees yet
+                setattr(tree_obj, 'inventory', Inventory.objects.get(id=id))
         else:
+            id_t = 0;
             tree_obj = Tree()
             setattr(tree_obj, 'inventory', Inventory.objects.get(id=id))
 
-
         form = TreeForm(instance=tree_obj)
-        print(tree_obj.id)
-        return render(request, self.template_name, {'form': form,'id':id,'id_t':id_t})
+        formset = TreeImageFormSet(queryset=t_imgs)
+        return render(request, self.template_name, {'form': form,'formset':formset,'id':id,'id_t':id_t})
 
     def post(self, request, *args, **kwargs):
         id = kwargs.get('id')
 
         if 'id_t' in kwargs:
             id_t = kwargs.get('id_t')
-            tree_obj = Tree.objects.get(id=id_t)
-            form = TreeForm(request.POST, request.FILES,instance=tree_obj)
+            if id_t != '0':
+                tree_obj = Tree.objects.get(id=id_t)
+                form = TreeForm(request.POST, request.FILES,instance=tree_obj)
+            else:
+                form = TreeForm(request.POST, request.FILES)
         else:
             form = TreeForm(request.POST, request.FILES)
 

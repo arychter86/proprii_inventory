@@ -1,12 +1,19 @@
 {% extends 'inventory/base.html' %}
 {% block content %}
   <form action="/inventory/{{id}}/tree/{{id_t}}/" method="post">
-      {% csrf_token %}
+        {% csrf_token %}
+
         <table class="table table-striped">
           {{ form.as_table }}
         </table>
-      <input type="submit" name="tree" value="Submit" />
-      <input type="submit" name="delete" value="Delete"/>
+        <input type="submit" name="tree" value="Submit" />
+        <input type="submit" name="delete" value="Delete"/>
+  </form>
+  <form action="" method="post">
+  <table class="table table-striped">
+    {{ formset.management_form }}
+    {{ formset.as_table }}
+  </table>
   </form>
 
 {% endblock content %}
