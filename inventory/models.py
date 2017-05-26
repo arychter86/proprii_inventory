@@ -15,7 +15,7 @@ class Inventory(models.Model):
     client_name = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.name + ", klient: " + self.client_name + ", data: " + str(self.created_date)
+        return str(self.id) + "_" +self.name + ", klient: " + self.client_name + ", data: " + str(self.created_date)
 
 class InventoryForm(forms.ModelForm):
     class Meta:
@@ -46,7 +46,7 @@ class Tree(models.Model):
             default=timezone.now)
 
     def __str__(self):
-        return self.name + " " + self.notes
+        return str(self.id) + "_" + self.name + "____" + str(self.created_date)
 
 class TreeForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -57,7 +57,7 @@ class TreeForm(forms.ModelForm):
 
     class Meta:
         model = Tree
-        fields = ['id','inventory','name', 'latin_name', 'height_m', 'circuit_cm', 'crown_m', 'notes']
+        fields = ['id','name', 'latin_name', 'height_m', 'circuit_cm', 'crown_m', 'notes']
         labels = {
             'name': _('Name'),
         }

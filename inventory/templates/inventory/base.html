@@ -12,14 +12,13 @@
           {% if request.user.is_authenticated %}
             Welcome '{{ request.user.username }}'
           {% endif %}
+          <a href="/logout">logout</a>
       </div>
-      <div class="content container">
-          <div class="row">
-              <div class="col-md-8">
+      <div class="content">
+
               {% block content %}
               {% endblock %}
-              </div>
-          </div>
+
       </div>
     </body>
 </html>
