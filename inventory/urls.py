@@ -28,7 +28,6 @@ urlpatterns = [
      url(r'^inventory/add/$', login_required(InventoryView.as_view())),
      url(r'^logout/$', auth_views.logout, {'next_page': '/'}, name='auth_logout'),
      url(r'^login/$', auth_views.login, name='login'),
-     url('^', include('django.contrib.auth.urls')),
      url(r'^inventory/(?P<id>[0-9]+)/tree/(?P<id_t>[0-9]+)/$', login_required(TreeView.as_view())),
      url(r'^inventory/(?P<id>[0-9]+)/tree/$', login_required(TreeView.as_view())),
      url(r'^inventory/(?P<id>[0-9]+)/tree/add/$', login_required(TreeView.as_view())),

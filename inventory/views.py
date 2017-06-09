@@ -14,6 +14,9 @@ class InventoryList(View):
         if request.user.is_authenticated():
             user = request.user
         inventorys = Inventory.objects.filter(author=user)
+
+        for inv in inventorys:
+            inv.treenum = Tree.objects.filter(inventory=inv).count()
         return render(request, 'inventory/inv_list.html', {'inventorys':inventorys})
 
 class InventoryView(View):
@@ -127,10 +130,10 @@ class TreeView(View):
             formset = TreeImageFormSet(queryset=TreeImage.objects.none())
             print('Test')
 
-        return render(request, self.template_name, {'form': form,'formset':formset,'inventory':inv_obj,'id':id,'id_t':id_t})
+        image_form = TreeImageForm()
+        return render(request, self.template_name, {'image_form': image_form, 'form': form,'formset':formset,'inventory':inv_obj,'id':id,'id_t':id_t})
 
     def post(self, request, *args, **kwargs):
-        id = kwargs.get('id')
 
         if 'id_t' in kwargs and 'id' in kwargs:
             id = kwargs.get('id')
@@ -145,19 +148,31 @@ class TreeView(View):
                 form = TreeForm(request.POST, request.FILES)
                 setattr(form.instance, 'inventory', inv_obj)
 
-            if form.is_valid():
-                # <process form cleaned data>
-                tree_obj = form.save(commit=False)
-                tree_obj.inventory =  Inventory.objects.get(id=id)
-                tree_obj.save()
-            else:
-                raise Http404("Tree formset not valid.")
+            if 'form' in request.POST:
+                if form.is_valid():
+                    # <process form cleaned data>
+                    tree_obj = form.save(commit=False)
+                    tree_obj.inventory =  Inventory.objects.get(id=id)
+                    tree_obj.save()
+                else:
+                    raise Http404("Tree formset not valid.")
 
-            t_imgs = TreeImage.objects.filter(tree = tree_obj)
+                t_imgs = TreeImage.objects.filter(tree = tree_obj)
 
-            if 'delete' in request.POST:
+            elif 'DELETE_IMGS' in request.POST:
                 tree_obj.delete()
                 return HttpResponseRedirect('/inventory/'+id)
+            elif 'add_img' in request.POST:
+                image_form = TreeImageForm(request.POST, request.FILES)
+                print(image_form)
+                if image_form.is_valid():
+                    # <process form cleaned data>
+                    img = image_form.save(commit=False)
+                    img.tree =  Tree.objects.get(id=id_t)
+                    img.save()
+                else:
+                    raise Http404("Tree formset not valid.")
+
 
 
             print("INVENTORY:",inv_obj,"TREE saved:",tree_obj)

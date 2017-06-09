@@ -1,6 +1,14 @@
 {% extends 'inventory/base.html' %}
 {% block content %}
 
+
+<div class="container">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Inventory List</a></li>
+    <li class="breadcrumb-item"><a href="/inventory/{{id}}/">Inventory {{id}}</a></li>
+  </ol>
+</div>
+
 <div class="container">
   <div class="row">
     <div class="col-sm-5">

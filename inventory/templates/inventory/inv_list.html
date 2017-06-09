@@ -1,39 +1,45 @@
 {% extends 'inventory/base.html' %}
 {% block content %}
 
-          <table class="table table-striped">
-            <thead>
-             <tr>
-               <th>id</th>
-               <th>Name</th>
-               <th>City</th>
-               <th>Street</th>
-               <th>Code</th>
-               <th>Date</th>
-               <th>Edit</th>
-             </tr>
-            </thead>
-            <tbody>
-              {% for inventory in inventorys %}
+<div class="container">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Inventory List</a></li>
+  </ol>
+</div>
+<div class="container">
+    <table class="table table-striped">
+      <thead>
+       <tr>
+         <th>id</th>
+         <th>Name</th>
+         <th>City</th>
+         <th>Street</th>
+         <th>Code</th>
+         <th>Date</th>
+         <th>Trees No.</th>
+         <th>Edit</th>
+       </tr>
+      </thead>
+      <tbody>
+        {% for inventory in inventorys %}
 
-                <span>
-                  <tr>
-                    <td>{{inventory.id}}</td>
-                    <td>{{inventory.name}}</td>
-                    <td>{{inventory.city}}</td>
-                    <td>{{inventory.street}}</td>
-                    <td>{{inventory.code}}</td>
-                    <td>{{inventory.created_date}}</td>
-                    <td>  <a href="/inventory/{{inventory.id}}/"> Click </a></td>
-                  </tr>
-                </span>
+          <span>
+            <tr>
+              <td>{{inventory.id}}</td>
+              <td>{{inventory.name}}</td>
+              <td>{{inventory.city}}</td>
+              <td>{{inventory.street}}</td>
+              <td>{{inventory.code}}</td>
+              <td>{{inventory.created_date}}</td>
+              <td>{{inventory.treenum}}</td>
+              <td>  <a href="/inventory/{{inventory.id}}/"> Click </a></td>
+            </tr>
+          </span>
 
-             {% endfor %}
+       {% endfor %}
 
-            </tbody>
-          </table>
+      </tbody>
+    </table>
+</div>
 
-        </div>
-    </body>
-</html>
 {% endblock content %}
