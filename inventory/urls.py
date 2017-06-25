@@ -20,6 +20,8 @@ from inventory.views import TreeView, InventoryView, InventoryList
 from django.conf import settings
 from django.contrib.auth import views as auth_views
 from django.conf.urls import include
+from django.conf import settings
+from django.conf.urls.static import static
 # ... your normal urlpatterns here
 
 urlpatterns = [
@@ -32,3 +34,4 @@ urlpatterns = [
      url(r'^inventory/(?P<id>[0-9]+)/tree/$', login_required(TreeView.as_view())),
      url(r'^inventory/(?P<id>[0-9]+)/tree/add/$', login_required(TreeView.as_view())),
 ]
+urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

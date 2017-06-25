@@ -43,6 +43,17 @@
 
             </div>
           </div>
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a data-toggle="collapse" href="#collapse2">Click to snap new image</a>
+              </h4>
+            </div>
+            <div id="collapse2" class="panel-collapse collapse">
+              <div id ="snap_home">
+              </div>
+            </div>
+          </div>
         </div>
 
 
@@ -60,6 +71,7 @@
                     {% for form in formset.forms %}
                         {% if forloop.first %}
                           <thead>
+                            <th>Image</th>
                             {% for field in form  %}
                                 <th>{{ field.label_tag }}</th>
                             {% endfor %}
@@ -68,6 +80,12 @@
                         <tbody>
                         {% endif %}
                         <tr>
+                            <td class="fieldWrapper">
+                              <a class="thumbnail" href="{{ form.instance.picture.url }}">
+                                  <img class="img-responsive" src="{{ form.instance.picture.url }}"  alt="">
+                              </a>
+
+                            </td>
                             {% for field in form %}
                                 <td class="fieldWrapper">
                                   {% if forloop.last %}
@@ -93,19 +111,6 @@
     </div>
   </div>
 </div>
-<div class="container">
-  <div class="row">
-    <div class="col-sm-5">
-      <!--
-      	Ideally these elements aren't created until it's confirmed that the
-      	client supports video/camera, but for the sake of illustrating the
-      	elements involved, they are created with markup (not JavaScript)
-      -->
-      <video id="video" width="640" height="480" autoplay></video>
-      <button id="snap">Snap Photo</button>
-      <canvas id="canvas" width="640" height="480"></canvas>
-
-    </div>
-  </div>
-</div>
+{% load staticfiles%}
+<script src="{% static 'js/snapshot.js' %}"></script>
 {% endblock content %}
