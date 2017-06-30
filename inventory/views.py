@@ -2,7 +2,7 @@ from django.shortcuts import render, get_list_or_404, get_object_or_404
 from django.views.generic import View
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-from .models import Inventory, InventoryForm, Tree, TreeForm, TreeImage, TreeImageForm
+from .models import Inventory, InventoryForm, Tree, TreeForm, TreeImage, TreeImageForm, TreeTrunk, TreeTrunkForm
 from django.forms import modelformset_factory
 from django.http import HttpResponseRedirect
 # Create your views here.
@@ -131,7 +131,8 @@ class TreeView(View):
             print('Test')
 
         image_form = TreeImageForm()
-        return render(request, self.template_name, {'image_form': image_form, 'form': form,'formset':formset,'inventory':inv_obj,'id':id,'id_t':id_t})
+        trunk_form = TreeTrunkForm()
+        return render(request, self.template_name, {'trunk_form':trunk_form,'image_form': image_form, 'form': form,'formset':formset,'inventory':inv_obj,'id':id,'id_t':id_t})
 
     def post(self, request, *args, **kwargs):
 
@@ -146,14 +147,16 @@ class TreeView(View):
             else:
                 print('Adding new TREE for INVENTORY:',inv_obj)
                 form = TreeForm(request.POST, request.FILES)
+                print('FORM:',form)
                 setattr(form.instance, 'inventory', inv_obj)
 
-            if 'form' in request.POST:
+            if 'tree' in request.POST:
                 if form.is_valid():
                     # <process form cleaned data>
                     tree_obj = form.save(commit=False)
                     tree_obj.inventory =  Inventory.objects.get(id=id)
                     tree_obj.save()
+                    print("INVENTORY:",inv_obj,"TREE saved:",tree_obj)
                 else:
                     raise Http404("Tree formset not valid.")
 
@@ -172,10 +175,5 @@ class TreeView(View):
                     img.save()
                 else:
                     raise Http404("Tree formset not valid.")
-
-
-
-            print("INVENTORY:",inv_obj,"TREE saved:",tree_obj)
-            form = TreeForm(instance=tree_obj)
 
         return HttpResponseRedirect('/inventory/'+id+'/tree/'+str(tree_obj.id)+'/')

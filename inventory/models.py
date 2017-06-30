@@ -39,7 +39,6 @@ class Tree(models.Model):
     name = models.CharField(max_length=200)
     latin_name = models.CharField(max_length=200)
     height_m = models.IntegerField()
-    circuit_cm = models.IntegerField()
     crown_m = models.IntegerField(default=0)
     notes = models.TextField(blank=True)
     created_date = models.DateTimeField(
@@ -47,6 +46,7 @@ class Tree(models.Model):
 
     def __str__(self):
         return str(self.id) + "_" + self.name + "____" + str(self.created_date)
+
 
 class TreeForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -57,7 +57,7 @@ class TreeForm(forms.ModelForm):
 
     class Meta:
         model = Tree
-        fields = ['id','name', 'latin_name', 'height_m', 'circuit_cm', 'crown_m', 'notes']
+        fields = ['id','name', 'latin_name', 'height_m', 'crown_m', 'notes']
         labels = {
             'name': _('Name'),
         }
@@ -91,3 +91,24 @@ class TreeImageForm(forms.ModelForm):
         labels = {
             'description': _('Description'),
         }
+
+class TreeTrunk(models.Model):
+    tree = models.ForeignKey('Tree')
+    trunk_cm = models.IntegerField()
+    meas_height_cm = models.IntegerField( default='130')
+    created_date = models.DateTimeField(
+            default=timezone.now)
+
+    def __str__(self):
+        return str(self.id) + "_" + + str(self.trunk_cm) + "____" + str(self.created_date)
+
+class TreeTrunkForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(TreeTrunkForm, self).__init__(*args, **kwargs)
+        instance = getattr(self, 'instance', None)
+        #if instance and instance.pk:
+        #    self.fields['name'].widget.attrs['readonly'] = True
+
+    class Meta:
+        model = TreeTrunk
+        fields = ['tree','trunk_cm', 'meas_height_cm', 'created_date']
