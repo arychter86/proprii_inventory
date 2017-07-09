@@ -100,7 +100,7 @@ class TreeTrunk(models.Model):
             default=timezone.now)
 
     def __str__(self):
-        return str(self.id) + "_" + + str(self.trunk_cm) + "____" + str(self.created_date)
+        return str(self.id) + "_" + + str(self.trunk_cm) + "__" + str(self.created_date)
 
 class TreeTrunkForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
