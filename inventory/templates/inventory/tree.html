@@ -78,7 +78,7 @@
                         {% if forloop.first %}
                           <thead>
                             <th>Image</th>
-                            {% for field in form.visible_fields   %}
+                            {% for field in form.fields   %}
                                 <th>{{ field.label_tag }}</th>
                             {% endfor %}
                                 <th>Edit</th>
@@ -92,7 +92,7 @@
                               </a>
 
                             </td>
-                            {% for field in form.visible_fields  %}
+                            {% for field in form.fields  %}
                                 <td class="fieldWrapper">
                                   {% if forloop.last %}
                                     {{ field }}
