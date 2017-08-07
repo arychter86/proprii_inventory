@@ -78,7 +78,7 @@
                         {% if forloop.first %}
                           <thead>
                             <th>Image</th>
-                            {% for field in form.fields   %}
+                            {% for field in form  %}
                                 <th>{{ field.label_tag }}</th>
                             {% endfor %}
                                 <th>Edit</th>
@@ -92,17 +92,19 @@
                               </a>
 
                             </td>
-                            {% for field in form.fields  %}
+                            {% for field in form %}
                                 <td class="fieldWrapper">
                                   {% if forloop.last %}
                                     {{ field }}
                                   {% else %}
                                     {{ field.value }}
-
+                                    {{ field.as_hidden }}
                                   {% endif %}
                                 </td>
                             {% endfor %}
-
+                            {% for hidden in form.hidden_fields %}
+                              {{ hidden }}
+                            {% endfor %}
                             <td><a href="/inventory/{{id}}/tree/{{id_t}}/img/{{form.id.value}}/"> Click </a></td>
                         </tr>
                     {% endfor %}
