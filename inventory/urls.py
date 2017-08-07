@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib.auth.decorators import login_required, permission_required
 from . import views
-from inventory.views import TreeView, InventoryView, InventoryList
+from inventory.views import TreeView, InventoryView, InventoryList, TreeImageView
 from django.conf import settings
 from django.contrib.auth import views as auth_views
 from django.conf.urls import include
@@ -31,6 +31,7 @@ urlpatterns = [
      url(r'^logout/$', auth_views.logout, {'next_page': '/'}, name='auth_logout'),
      url(r'^login/$', auth_views.login, name='login'),
      url(r'^inventory/(?P<id>[0-9]+)/tree/(?P<id_t>[0-9]+)/$', login_required(TreeView.as_view())),
+     url(r'^inventory/(?P<id>[0-9]+)/tree/(?P<id_t>[0-9]+)/snap/$', login_required(TreeImageView.as_view())),
      url(r'^inventory/(?P<id>[0-9]+)/tree/$', login_required(TreeView.as_view())),
      url(r'^inventory/(?P<id>[0-9]+)/tree/add/$', login_required(TreeView.as_view())),
 ]

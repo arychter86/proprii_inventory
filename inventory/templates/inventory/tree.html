@@ -46,11 +46,11 @@
           <div class="panel panel-default">
             <div class="panel-heading">
               <h4 class="panel-title">
-                <a data-toggle="collapse" href="#collapse1">Click to add new image</a>
+                <a data-toggle="collapse" href="#collapse2">Click to add new image</a>
               </h4>
             </div>
-            <div id="collapse1" class="panel-collapse collapse">
-              <form method="post" action="/inventory/{{id}}/tree/{{id_t}}/">
+            <div id="collapse2" class="panel-collapse collapse">
+              <form method="post" action="/inventory/{{id}}/tree/{{id_t}}/" enctype="multipart/form-data">
                 {% csrf_token %}
                   <table class="table table-striped">
                     {{ image_form.as_table }}
@@ -58,17 +58,6 @@
                 <input type="submit" name="add_img" value="Upload New Img" />
               </form>
 
-            </div>
-          </div>
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h4 class="panel-title">
-                <a data-toggle="collapse" href="#collapse2">Click to snap new image</a>
-              </h4>
-            </div>
-            <div id="collapse2" class="panel-collapse collapse">
-              <div id ="snap_home">
-              </div>
             </div>
           </div>
         </div>
@@ -129,5 +118,4 @@
   </div>
 </div>
 {% load staticfiles%}
-<script src="{% static 'js/snapshot.js' %}"></script>
 {% endblock content %}

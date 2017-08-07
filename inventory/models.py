@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django import forms
@@ -20,9 +22,9 @@ class Inventory(models.Model):
 class InventoryForm(forms.ModelForm):
     class Meta:
         model = Inventory
-        fields = ['author', 'name', 'city', 'street', 'code', 'created_date', 'client_name']
+        fields = [ 'name', 'city', 'street', 'code', 'created_date', 'client_name']
         labels = {
-            'author': _('Author'),
+            'name': _('Name'),
         }
         help_texts = {
             'name': _('Choose Author.'),
@@ -70,13 +72,15 @@ class TreeForm(forms.ModelForm):
 
 class TreeImage(models.Model):
     tree = models.ForeignKey('Tree',null=True)
+    picture = models.ImageField(upload_to = 'photos/', default = 'no-img.jpg')
     description = models.CharField(max_length=200)
-    filename = models.CharField(max_length=200)
-    picture = models.ImageField(upload_to = 'photos/', default = 'pic_folder/None/no-img.jpg')
     created_date = models.DateTimeField(
             default=timezone.now)
-    def __str__(self):
-        return self.filename + " " + self.tree.name
+    @receiver(pre_delete)
+    def delete_repo(sender, instance, **kwargs):
+        if sender == TreeImage:
+            instance.picture.delete(save=True)
+
 
 class TreeImageForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -87,7 +91,7 @@ class TreeImageForm(forms.ModelForm):
 
     class Meta:
         model = TreeImage
-        fields = ['description','filename', 'picture', 'created_date']
+        fields = ['description', 'picture', 'created_date']
         labels = {
             'description': _('Description'),
         }
