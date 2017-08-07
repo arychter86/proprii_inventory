@@ -91,7 +91,7 @@ class TreeImageForm(forms.ModelForm):
 
     class Meta:
         model = TreeImage
-        fields = ['description', 'picture', 'created_date']
+        fields = ['description', 'created_date']
         labels = {
             'description': _('Description'),
         }

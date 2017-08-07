@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from .models import Inventory, InventoryForm, Tree, TreeForm, TreeImage, TreeImageForm, TreeTrunk, TreeTrunkForm
 from django.forms import modelformset_factory
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.core.files import File
 import json
 import base64
@@ -119,7 +119,7 @@ class TreeView(View):
             tree_obj = get_object_or_404(queryset, pk=id_t)
 
             t_imgs = TreeImage.objects.filter(tree = tree_obj)
-            print(t_imgs)
+
         elif 'id' in kwargs:
             id = kwargs.get('id')
             inv_obj = get_object_or_404(Inventory, pk=id)
@@ -250,13 +250,16 @@ class TreeImageView(View):
             t_img.save(force_insert=True)
             filename = 'tree_'+str(tree_obj.id)+'_image_'+str(t_img.id)+'.png'
             full_filename = os.path.join(settings.MEDIA_ROOT, "photos", filename)
-            print(full_filename)
+            print('Saving image to', full_filename)
             with open(full_filename,'wb') as f:
                 f.write(image_binary)
             t_img.picture.name = "photos/"+filename
-
             t_img.save()
-
-            print('Saving', t_img.picture.path)
-
-        return render(request, self.template_name, {'tree':tree_obj,'inventory':inv_obj,'id':id,'id_t':id_t})
+        #return HttpResponseRedirect('/inventory/'+id+'/tree/'+str(tree_obj.id)+'/')
+        redirect = '/inventory/'+id+'/tree/'+str(tree_obj.id)+'/';
+        response_data = {}
+        response_data['redirect'] =redirect
+        response_data['id'] = id
+        response_data['id'] = id_t
+        data = json.dumps(response_data)
+        return HttpResponse(data, content_type='application/json')
