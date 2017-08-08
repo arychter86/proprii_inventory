@@ -248,7 +248,7 @@ class TreeImageView(View):
             t_img.tree = tree_obj
             t_img.description = 'img'
             t_img.save(force_insert=True)
-            filename = 'tree_'+str(tree_obj.id)+'_image_'+str(t_img.id)+'.png'
+            filename = 'tree_'+str(tree_obj.id)+'_image_'+str(t_img.id)+'.jpeg'
             full_filename = os.path.join(settings.MEDIA_ROOT, "photos", filename)
             print('Saving image to', full_filename)
             with open(full_filename,'wb') as f:
