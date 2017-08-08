@@ -87,6 +87,7 @@ $.ajaxSetup({
           {minWidth: 1280},
           {minWidth: 1920},
           {minWidth: 2560},
+
         ],
 
      }
@@ -123,9 +124,10 @@ function setupSnapAndAjaxPost() {
   // Trigger photo take
   document.getElementById("video").addEventListener("click", function() {
 
-    canvas.height = video.videoHeight;
-    canvas.width = video.videoWidth;
-    console.log('Width ', video.videoWidth );
+  canvas.height = video.videoHeight;
+  canvas.width = video.videoWidth;
+   $(video).hide();
+  console.log('Width ', video.videoWidth );
 
   context.drawImage(video, 0, 0);
   //tutaj trzeba przekazac url do image file canvas.toDataURL()

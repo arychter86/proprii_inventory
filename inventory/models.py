@@ -66,7 +66,9 @@ class TreeForm(forms.ModelForm):
         help_texts = {
             'name': _('Choose polish name.'),
         }
-        
+        widgets = {
+            'notes': forms.Textarea(attrs={'width':'100%','cols': 10, 'rows': 3}),
+        }
 
 class TreeImage(models.Model):
     tree = models.ForeignKey('Tree',null=True)
@@ -89,10 +91,8 @@ class TreeImageForm(forms.ModelForm):
 
     class Meta:
         model = TreeImage
-        fields = ['description', 'created_date']
-        labels = {
-            'description': _('Description'),
-        }
+        fields = []
+
 
 class TreeTrunk(models.Model):
     tree = models.ForeignKey('Tree')
