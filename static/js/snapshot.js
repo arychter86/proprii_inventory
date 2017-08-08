@@ -34,55 +34,29 @@ $.ajaxSetup({
     }
 });
 
+
+function hasGetUserMedia() {
+  return !!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
+            navigator.mozGetUserMedia || navigator.msGetUserMedia);
+}
+
+if (hasGetUserMedia()) {
+  alert('Wir OK');
+} else {
+  alert('getUserMedia() is not supported in your browser');
+}
+
+
+
 // Get access to the camera!
 if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
     // Not adding `{ audio: true }` since we only want video now
     navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
         home.appendChild(video);
         home.appendChild(canvas);
-        // Trigger photo take
-        document.getElementById("video").addEventListener("click", function() {
-        context.drawImage(video, 0, 0, 640, 480);
-        //tutaj trzeba przekazac url do image file canvas.toDataURL()
-        // trzeba to zrobic przez posta z url zdjecia i update form'a z nowym zdjeciem
-
-        video.width = "0";
-        video.height = "0";
-
-        var img_data = {
-                  id: id,
-                  id_t: id_t,
-                  img_base64: canvas.toDataURL('image/png')
-              };
-
-         $('#snap_txt').text('Great! Sending snap...')
-
-
-          $.ajax({
-                 type:"POST",
-                 url:"/inventory/"+ id + "/tree/"+id_t+"/snap/",
-                 dataType: "json",
-                 data: JSON.stringify(img_data),
-                 success: function(data) {
-      
-                   if (data.redirect) {
-                      $('#snap_txt').text('Redirecting...');
-                       window.location.replace(data['redirect']);
-                   }
-                 },
-                 error: function(xhr, textStatus, errorThrown){
-                   console.log(xhr.statusText);
-                    console.log(textStatus);
-                    console.log(errorThrown);
-                 }
-            });
-
-
-
-
-        });
         video.src = window.URL.createObjectURL(stream);
         video.play();
+        setupSnapAndAjaxPost();
     }).catch(function(err) {
         node.nodeValue= err.name;
         home.appendChild(para);
@@ -91,6 +65,46 @@ if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
     node.nodeValue= "Can't connect to meadi";
     home.appendChild(para);
 }
+
+
+
+function setupSnapAndAjaxPost() {
+  // Trigger photo take
+  document.getElementById("video").addEventListener("click", function() {
+  context.drawImage(video, 0, 0, 640, 480);
+  //tutaj trzeba przekazac url do image file canvas.toDataURL()
+  // trzeba to zrobic przez posta z url zdjecia i update form'a z nowym zdjeciem
+
+    var img_data = {
+              id: id,
+              id_t: id_t,
+              img_base64: canvas.toDataURL('image/png')
+          };
+
+    $('#snap_txt').text('Great! Sending snap...')
+
+    $.ajax({
+           type:"POST",
+           url:"/inventory/"+ id + "/tree/"+id_t+"/snap/",
+           dataType: "json",
+           data: JSON.stringify(img_data),
+           success: function(data) {
+
+             if (data.redirect) {
+                $('#snap_txt').text('Redirecting...');
+                 window.location.replace(data['redirect']);
+             }
+           },
+           error: function(xhr, textStatus, errorThrown){
+             console.log(xhr.statusText);
+              console.log(textStatus);
+              console.log(errorThrown);
+           }
+    });
+  });
+}
+
+
 
 /* Legacy code below: getUserMedia
 else if(navigator.getUserMedia) { // Standard
