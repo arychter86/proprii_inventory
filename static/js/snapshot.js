@@ -78,9 +78,16 @@ $.ajaxSetup({
 
    var constraints = {
      video: {
+<<<<<<< HEAD
 
        optional: [
          {facingMode: "environment" },
+=======
+       optional: [{
+         sourceId: videoSelect.value
+       }],
+       optional: [
+>>>>>>> 157df6119506f6d2b374be214f111f4a50b3c92c
           {minWidth: 320},
           {minWidth: 640},
           {minWidth: 1024},
