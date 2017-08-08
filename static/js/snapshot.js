@@ -34,10 +34,6 @@ $.ajaxSetup({
     }
 });
 
-var errorCallback = function(e) {
-    $('#snap_txt').text("Can't connect to media");
-   console.log('Reeeejected!', e);
- };
 
 
  if (hasGetUserMedia()) {
@@ -52,7 +48,7 @@ var errorCallback = function(e) {
   setupSnapAndAjaxPost();
 
  } else {
-   $('#snap_txt').text("getUserMedia() is not supported in your browser");
+   errorCallback
  }
 
 
@@ -107,6 +103,10 @@ var errorCallback = function(e) {
      $('#snap_txt').text("Camera not avaliable...");
  }
 
+ var errorCallback = function(e) {
+     $('#snap_txt').text("Can't connect to media");
+    console.log('Reeeejected!', e);
+  };
 
 function hasGetUserMedia() {
   return !!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
@@ -148,24 +148,3 @@ function setupSnapAndAjaxPost() {
     });
   });
 }
-
-
-
-/* Legacy code below: getUserMedia
-else if(navigator.getUserMedia) { // Standard
-    navigator.getUserMedia({ video: true }, function(stream) {
-        video.src = stream;
-        video.play();
-    }, errBack);
-} else if(navigator.webkitGetUserMedia) { // WebKit-prefixed
-    navigator.webkitGetUserMedia({ video: true }, function(stream){
-        video.src = window.webkitURL.createObjectURL(stream);
-        video.play();
-    }, errBack);
-} else if(navigator.mozGetUserMedia) { // Mozilla-prefixed
-    navigator.mozGetUserMedia({ video: true }, function(stream){
-        video.src = window.URL.createObjectURL(stream);
-        video.play();
-    }, errBack);
-}
-*/
