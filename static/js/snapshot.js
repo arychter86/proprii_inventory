@@ -86,7 +86,7 @@ $.ajaxSetup({
        }],
        width: { ideal: 1280 },
        height: { ideal: 720 },
-       facingMode: { exact: "environment" } },
+       facingMode: { exact: "environment" } ,
      }
    };
 
