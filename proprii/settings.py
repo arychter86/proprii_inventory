@@ -25,7 +25,7 @@ SECRET_KEY = '#n3(51e6+2#acj0$ujx1#6nq-867eny@75!x0_1is%!v$sms-%'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['128.141.130.182', 'arychter.pythonanywhere.com']
+ALLOWED_HOSTS = ['128.141.130.182', 'arychter.pythonanywhere.com',  '127.0.0.1']
 
 
 # Application definition
