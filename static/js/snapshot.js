@@ -40,10 +40,23 @@ var errorCallback = function(e) {
  };
 
 
- navigator.mediaDevices.enumerateDevices()
-     .then(gotDevices).then(getStream).catch(handleError);
+ if (hasGetUserMedia()) {
 
-videoSelect.onchange = getStream;
+   navigator.mediaDevices.enumerateDevices()
+       .then(gotDevices).then(getStream).catch(handleError);
+
+  videoSelect.onchange = getStream;
+
+  home.appendChild(video);
+  home.appendChild(canvas);
+  setupSnapAndAjaxPost();
+
+ } else {
+   $('#snap_txt').text("getUserMedia() is not supported in your browser");
+ }
+
+
+
 
  function gotDevices(deviceInfos) {
    for (var i = 0; i !== deviceInfos.length; ++i) {
@@ -86,9 +99,7 @@ videoSelect.onchange = getStream;
    window.stream = stream; // make stream available to console
    video.srcObject = stream;
    video.play();
-   home.appendChild(video);
-   home.appendChild(canvas);
-   setupSnapAndAjaxPost();
+
  }
 
  function handleError(error) {
@@ -97,24 +108,6 @@ videoSelect.onchange = getStream;
  }
 
 
-/*if (hasGetUserMedia()) {
-  navigator.getUserMedia({video: true, audio: false}, function(localMediaStream) {
-    home.appendChild(video);
-    home.appendChild(canvas);
-    video.src = window.URL.createObjectURL(localMediaStream);
-    // Note: onloadedmetadata doesn't fire in Chrome when using it with getUserMedia.
-    // See crbug.com/110938.
-    video.onloadedmetadata = function(e) {
-      setupSnapAndAjaxPost();
-    };
-  }, errorCallback);
-
-
-} else {
-  $('#snap_txt').text("getUserMedia() is not supported in your browser");
-}
-
-*/
 function hasGetUserMedia() {
   return !!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
             navigator.mozGetUserMedia || navigator.msGetUserMedia);
