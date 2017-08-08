@@ -85,7 +85,7 @@ videoSelect.onchange = getStream;
  function gotStream(stream) {
    window.stream = stream; // make stream available to console
    video.srcObject = stream;
-   vide.play();
+   video.play();
    home.appendChild(video);
    home.appendChild(canvas);
    setupSnapAndAjaxPost();
