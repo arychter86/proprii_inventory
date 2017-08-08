@@ -18,8 +18,8 @@
             <table class="table table-striped">
               {{ form.as_table }}
             </table>
-            <input type="submit" name="tree" value="Submit" />
-            <input type="submit" name="delete" value="Delete"/>
+            <input type="submit" name="tree" value="Submit" class="btn btn-success btn-lg" role="button"/>
+            <input type="submit" name="delete" value="Delete" class="btn btn-danger btn-lg" role="button"/>
       </form>
     </div>
     <div class="col-sm-7">
@@ -28,22 +28,43 @@
             <div class="panel panel-default">
               <div class="panel-heading">
                 <h4 class="panel-title">
-                  <a data-toggle="collapse" href="#collapse1">Click to add new trunk</a>
+                  Trunk List
                 </h4>
               </div>
-              <div id="collapse1" class="panel-collapse collapse">
-                <form method="post" action="/inventory/{{id}}/tree/{{id_t}}/">
-                  {% csrf_token %}
-                    <table class="table table-striped">
-                      {{ trunk_form.as_table }}
-                    </table>
-                  <input type="submit" name="add_img" value="Upload New Img" />
-                </form>
+              <div class="panel-body">
+
 
               </div>
+              <div class="panel-footer">
+                <form method="post" action="/inventory/{{id}}/tree/{{id_t}}/">
+                  {% csrf_token %}
+                  <div class="row">
+                    <div class="col-sm-4">
+                    Trunk cm:
+                    </div>
+                    <div class="col-sm-4">
+                      Meas height cm:
+                    </div>
+                  </div>
+
+                  <dic class="row">
+                    <div class="col-sm-4">
+                      <input type="number" name="trunk_cm" required id="id_trunk_cm" class="form-control"/>
+                    </div>
+                    <div class="col-sm-4">
+                      <input type="number" name="meas_height_cm" value="130" required id="id_meas_height_cm"  class="form-control"/>
+                    </div>
+                    <div class="col-sm-4">
+                      <input type="submit" name="add_img" value="New Trunk" class="btn btn-info " role="button"/>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
             </div>
           </div>
       </div>
+
       <div class="row">
         <div class="col-sm-12">
           <a href="/inventory/{{id}}/tree/{{id_t}}/snap/" class="btn btn-info btn-lg" role="button">Snap A PHOTO</a>
