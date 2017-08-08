@@ -81,6 +81,14 @@ $.ajaxSetup({
        optional: [{
          sourceId: videoSelect.value
        }],
+       optional: [
+          {minWidth: 320},
+          {minWidth: 640},
+          {minWidth: 1024},
+          {minWidth: 1280},
+          {minWidth: 1920},
+          {minWidth: 2560},
+        ],
 
      }
    };
