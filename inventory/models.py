@@ -113,4 +113,4 @@ class TreeTrunkForm(forms.ModelForm):
 
     class Meta:
         model = TreeTrunk
-        fields = ['tree','trunk_cm', 'meas_height_cm', 'created_date']
+        fields = ['trunk_cm', 'meas_height_cm']
