@@ -67,7 +67,7 @@ class TreeForm(forms.ModelForm):
             'name': _('Choose polish name.'),
         }
         widgets = {
-            'notes': forms.Textarea(attrs={'cols': 40, 'rows': 1}),
+            'notes': forms.Textarea(attrs={ 'rows': 2}),
         }
 
 class TreeImage(models.Model):
