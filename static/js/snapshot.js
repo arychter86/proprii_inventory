@@ -4,18 +4,15 @@
 var home = document.getElementById("vid_container");
 var snap_txt  = document.getElementById("snap_txt");
 var video = document.createElement('video');
-var checkbox = document.createElement('checkbox');
+
 var videoSelect = document.querySelector('select#videoSource');
 
 video.id = "video";
-video.width = "640";
-video.height = "480";
 video.autoplay = true;
 // Elements for taking the snapshot
 var canvas = document.createElement('canvas');
 canvas.id = "canvas";
-canvas.width = "640";
-canvas.height = "480";
+
 
 
 var context = canvas.getContext('2d');
@@ -84,14 +81,13 @@ $.ajaxSetup({
        optional: [{
          sourceId: videoSelect.value
        }],
-       width: { ideal: 1280 },
-       height: { ideal: 720 },
-       facingMode: { exact: "environment" } ,
+
      }
    };
 
    navigator.mediaDevices.getUserMedia(constraints).
        then(gotStream).catch(handleError);
+
  }
 
  function gotStream(stream) {
@@ -119,6 +115,11 @@ function hasGetUserMedia() {
 function setupSnapAndAjaxPost() {
   // Trigger photo take
   document.getElementById("video").addEventListener("click", function() {
+
+    canvas.height = video.videoHeight;
+    canvas.width = video.videoWidth;
+    console.log('Width ', video.videoWidth );
+
   context.drawImage(video, 0, 0);
   //tutaj trzeba przekazac url do image file canvas.toDataURL()
   // trzeba to zrobic przez posta z url zdjecia i update form'a z nowym zdjeciem
