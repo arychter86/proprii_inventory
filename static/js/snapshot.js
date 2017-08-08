@@ -78,9 +78,16 @@ $.ajaxSetup({
 
    var constraints = {
      video: {
-       optional: [{
-         sourceId: videoSelect.value
-       }],
+
+       optional: [
+         {facingMode: "environment" },
+          {minWidth: 320},
+          {minWidth: 640},
+          {minWidth: 1024},
+          {minWidth: 1280},
+          {minWidth: 1920},
+          {minWidth: 2560},
+        ],
 
      }
    };
@@ -127,7 +134,7 @@ function setupSnapAndAjaxPost() {
     var img_data = {
               id: id,
               id_t: id_t,
-              img_base64: canvas.toDataURL('image/png')
+              img_base64: canvas.toDataURL('image/jpeg')
           };
 
     $('#snap_txt').text('Great! Sending snap...')
@@ -145,6 +152,7 @@ function setupSnapAndAjaxPost() {
              }
            },
            error: function(xhr, textStatus, errorThrown){
+
              console.log(xhr.statusText);
               console.log(textStatus);
               console.log(errorThrown);
