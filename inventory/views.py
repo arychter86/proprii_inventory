@@ -217,7 +217,10 @@ class TreeView(View):
                     else:
                         return HttpResponseRedirect('/inventory/'+id+'/tree/'+id_t+'/')
                 else:
-                    tree_obj = Tree()
+                    if id_t == '0':
+                        tree_obj = Tree()
+                    else:
+                        tree_obj = form.instance
                     print('Tree form not valid ', form.errors)
 
 
