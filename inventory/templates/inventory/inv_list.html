@@ -11,13 +11,13 @@
     <table class="table table-striped">
       <thead>
        <tr>
-         <th>id</th>
-         <th>Name</th>
-         <th>City</th>
-         <th>Street</th>
-         <th>Date</th>
-         <th>Trees No.</th>
-         <th>Edit</th>
+         <th class="col-sm-1">id</th>
+         <th class="col-sm-3">Name</th>
+         <th class="col-sm-2">City</th>
+         <th class="col-sm-2">Street</th>
+         <th class="col-sm-2">Date</th>
+         <th class="col-sm-1" >Trees No.</th>
+         <th class="col-sm-1">Edit</th>
        </tr>
       </thead>
       <tbody>
@@ -31,7 +31,7 @@
               <td>{{inventory.street}}</td>
               <td>{{inventory.created_date}}</td>
               <td>{{inventory.treenum}}</td>
-              <td>  <a href="/inventory/{{inventory.id}}/"> Click </a></td>
+              <td>  <a href="/inventory/{{inventory.id}}/" class="btn btn-success btn-sm" role="button"> Click </a></td>
             </tr>
           </span>
 

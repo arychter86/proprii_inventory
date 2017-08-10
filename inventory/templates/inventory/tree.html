@@ -2,161 +2,279 @@
 {% block content %}
 
 
-<div class="container">
+<div class="container ">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="/">Inventory List</a></li>
     <li class="breadcrumb-item"><a href="/inventory/{{id}}/">Inventory {{id}}</a></li>
-    <li class="breadcrumb-item"><a href="/inventory/{{id}}/tree/{{id_t}}/">Tree {{id_t}}</a></li>
+    <li class="breadcrumb-item"><a href="/inventory/{{id}}/tree/{{id_t}}/">Tree {{form.instance.tree_number}}</a></li>
   </ol>
 </div>
 
 <div class="container">
   <div class="row">
-    <div class="col-sm-6">
+    <div class="col-sm-5">
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h4 class="panel-title">
-            Tree details
-          </h4>
+          <h3>
+            Tree <b>{{form.instance.tree_number}}</b> details
+          </h3>
           </div>
           <div class="panel-body">
 
             <form action="/inventory/{{id}}/tree/{{id_t}}/" method="post" class="form-horizontal">
-                  <div class="form-group">
+
                   {% csrf_token %}
+
+                  <div class="row form-group">
+                      <div><span class="label label-danger">{{ trunk_form.tree_number.errors.as_text }}</span></div>
+                      <label class="control-label col-sm-3" for="id_tree_number">Tree number:</label>
+                      <div class="col-sm-9">
+                        <div><span class="label label-danger">{{ trunk_form.tree_number.errors.as_text }}</span></div>
+                        <input value="{{form.tree_number.value}}" class="form-control" type="number" name="tree_number" maxlength="200" required id="id_tree_number" />
+                      </div>
                   </div>
-                    <div class="form-group">
+
+                    <div class="row form-group">
+
                         <label class="control-label col-sm-3" for="id_name">Name:</label>
                         <div class="col-sm-9">
-                          <input value={{form.name.value}} class="form-control" type="text" name="name" maxlength="200" required id="id_name" />
+                          <div><span class="label label-danger">{{ trunk_form.name.errors.as_text }}</span></div>
+                          <input value="{{form.name.value}}" class="form-control" type="text" name="name" maxlength="200" required id="id_name" />
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="row form-group">
+
                         <label class="control-label col-sm-3" for="id_latin_name">Latin name:</label>
                         <div class="col-sm-9">
-                          <input value={{form.latin_name.value}} class="form-control" type="text" name="latin_name" maxlength="200" required id="id_latin_name" />
+                          <div><span class="label label-danger">{{ trunk_form.latin_name.errors.as_text }}</span></div>
+                          <input value="{{form.latin_name.value}}" class="form-control" type="text" name="latin_name" maxlength="200" required id="id_latin_name" />
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="row form-group">
+
                         <label class="control-label col-sm-3" for="id_height_m">Height m:</label>
                         <div class="col-sm-9">
-                          <input value={{form.height_m.value}} class="form-control" type="number" name="height_m"  required id="id_height_m" />
+                          <div><span class="label label-danger">{{ trunk_form.height_m.errors.as_text }}</span></div>
+                          <input value="{{form.height_m.value}}" class="form-control" type="number" name="height_m"  required id="id_height_m" />
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="row form-group">
+
                         <label class="control-label col-sm-3" for="id_crown_m">Crown m:</label>
                         <div class="col-sm-9">
-                          <input value={{form.crown_m.value}} class="form-control" type="number" name="crown_m" required id="id_crown_m" />
+                          <div><span class="label label-danger">{{ trunk_form.crown_m.errors.as_text }}</span></div>
+                          <input value="{{form.crown_m.value}}" class="form-control" type="number" name="crown_m" required id="id_crown_m" />
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="row form-group">
                         <label class="control-label col-sm-3" for="id_notes">Notes:</label>
                         <div class="col-sm-9">
                           <textarea class="form-control" name="notes" cols="10" rows="3" width="100%" id="id_notes">{{form.notes.value}}</textarea>
                         </div>
                     </div>
-                    <div class="form-group">
-                      <input type="submit" name="tree" value="Submit" class="btn btn-success btn-lg" role="button"/>
-                      <input type="submit" name="delete" value="Delete" class="btn btn-danger btn-lg" role="button"/>
+                    <div class="form-group row">
+                          <div class="offset-sm-6 col-sm-12">
+                            <input type="submit" name="tree" value="Submit" class="btn btn-success btn-lg" role="button"/>
+                            <input type="submit" name="save_exit" value="Save And Exit" class="btn btn-primary btn-lg" role="button"/>
+
+                          </div>
                     </div>
             </form>
-          </div>
+            {% if form.instance.pk  %}
+            <form action="/inventory/{{id}}/tree/{{id_t}}/delete/" method="post">
+                {% csrf_token %}
+                <button name="delete" class="btn btn-danger btn-lg" role="button">Delete</button>
+            </form>
+
+            {% endif %}
+            <div class="row">
+                
+                    <div class="compact marquee">
+                      <div id="info">
+                        <p id="info_start">
+                          Click on the microphone icon and begin speaking for as long as you like.
+                        </p>
+                        <p id="info_speak_now" style="display:none">
+                          Speak now.
+                        </p>
+                        <p id="info_no_speech" style="display:none">
+                          No speech was detected. You may need to adjust your <a href=
+                          "//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892">microphone
+                          settings</a>.
+                        </p>
+                        <p id="info_no_microphone" style="display:none">
+                          No microphone was found. Ensure that a microphone is installed and that
+                          <a href="//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892">
+                          microphone settings</a> are configured correctly.
+                        </p>
+                        <p id="info_allow" style="display:none">
+                          Click the "Allow" button above to enable your microphone.
+                        </p>
+                        <p id="info_denied" style="display:none">
+                          Permission to use microphone was denied.
+                        </p>
+                        <p id="info_blocked" style="display:none">
+                          Permission to use microphone is blocked. To change, go to
+                          chrome://settings/contentExceptions#media-stream
+                        </p>
+                        <p id="info_upgrade" style="display:none">
+                          Web Speech API is not supported by this browser. Upgrade to <a href=
+                          "//www.google.com/chrome">Chrome</a> version 25 or later.
+                        </p>
+                      </div>
+                      <div id="div_start">
+                        <button id="start_button" onclick="startButton(event)"  class="btn btn-warning btn-lg" role="button">Start</button>
+
+                      </div>
+                      <div id="results">
+                        <span class="final" id="final_span"></span> <span class="interim" id=
+                        "interim_span"></span>
+                      </div>
+
+
+                    </div>
+            </div>
+            </div>
+
         </div>
 
     </div>
-    <div class="col-sm-6">
+    <div class="col-sm-7">
       <div class="row">
           <div class="col-sm-12">
             <div class="panel panel-default">
               <div class="panel-heading">
                 <h4 class="panel-title">
-                  Trunk List
+                  Tree trunks
                 </h4>
               </div>
               <div class="panel-body">
+                {% if  form.instance.pk  %}
+                      <table class="table table-striped">
+
+                              {% for trunk in trunk_list %}
+
+                                  <tr>
+                                    <td class="fieldWrapper">
+                                      {{trunk.trunk_cm}}
+                                      </td>
+                                       <td class="fieldWrapper">
+                                        {{trunk.meas_height_cm}}
+                                      </td>
+
+                                       <td class="fieldWrapper">
+                                         <form action="/inventory/{{id}}/tree/{{id_t}}/trunk/{{trunk.id}}/delete/" method="post">
+                                             {% csrf_token %}
+                                             <button name="delete" class="btn btn-danger btn-sm" role="button">Delete</button>
+                                         </form>
+                                       </td>
+                                    </tr>
+                              {% endfor %}
+                          </tbody>
+                      </table>
+                {% else %}
+                  <p>No trunks yet</p>
+                {% endif %}
+
               </div>
 
               <div class="panel-footer">
+                {% if form.instance.pk  %}
                 <form method="post" action="/inventory/{{id}}/tree/{{id_t}}/" class="form-inline">
 
                     {% csrf_token %}
-
+                    <div><span class="label label-danger">{{ trunk_form.trunk_cm.errors.as_text }}</span></div>
+                    <div><span class="label label-danger">{{ trunk_form.meas_height_cm.errors.as_text }}</span></div>
                     <label class="sr-only" for="id_trunk_cm">Trunk cm:</label>
-                    <input type="number" name="trunk_cm" placeholder="Trunk CM" required id="id_trunk_cm" class="form-control mb-2 mr-sm-2 mb-sm-0"/>
+                    <input value="{{trunk_form.trunk_cm.value}}"" type="number" name="trunk_cm" placeholder="Trunk CM" required id="id_trunk_cm" class="form-control mb-2 mr-sm-2 mb-sm-0"/>
+
 
                     <label  class="sr-only" for="id_meas_height_cm">at</label>
                     <div class="input-group mb-2 mr-sm-2 mb-sm-0">
                       <div class="input-group-addon">@</div>
-                      <input type="number" name="meas_height_cm" required  id="id_meas_height_cm"  value="130" class="form-control">
+                      <input value={{trunk_form.meas_height_cm.value}} type="number" name="meas_height_cm" required  id="id_meas_height_cm"  value="130" class="form-control">
                     </div>
 
                     <div class="form-group">
                       <input type="submit" name="add_trunk" value="New Trunk" class="btn btn-info " role="button"/>
                     </div>
                 </form>
+                {% endif %}
               </div>
 
             </div>
           </div>
       </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="row">
+      <div class="col-sm-12">
 
-      <div class="row">
-        <div class="col-sm-12">
-          <a href="/inventory/{{id}}/tree/{{id_t}}/snap/" class="btn btn-info btn-lg" role="button">Snap A PHOTO</a>
-        </div>
+      </div>
+    </div>
+    {% if form.instance.pk  %}
+    <div class="row">
+      <div class="col-sm-12">
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+            <a href="/inventory/{{id}}/tree/{{id_t}}/snap/" class="btn btn-info btn-lg" role="button">Snap a new PHOTO</a>
+          <span class="label label-success" > Number of images: {{image_list.count}}</span>
+            </h4>
+          </div>
+          <div class="panel-body">
+
+            {% if form.instance.pk  %}
+
+                      <div class="row">
+                          {% for image in image_list %}
+                              <div class="col-sm-3">
+                                  <div class="panel panel-default">
+                                <div class="panel-heading">
+                                  <h4 class="panel-title text-center">
+                                    Image {{image.id}}
+                                  </h4>
+                                </div>
+                                <div class="panel-body">
+                                  <div class="fieldWrapper">
+                                    <a class="thumbnail" href="{{ image.picture.url }}">
+                                        <img class="img-responsive" src="{{ image.picture.url }}"  alt="">
+                                    </a>
+
+                                  </div>
+                                </div>
+                                  <div class="panel-footer">
+                                    <td class="fieldWrapper">
+                                      <form class="text-center" action="/inventory/{{id}}/tree/{{id_t}}/image/{{image.id}}/delete/" method="post">
+                                          {% csrf_token %}
+                                          <button name="delete" class="btn btn-danger btn-sm" role="button">Delete</button>
+                                      </form>
+                                    </td>
+
+                                </div>
+                              </div>
+                              </div>
+                          {% endfor %}
+                      </tbody>
+                    </div>
+
+
+            {% else %}
+              <p>No images to show</p>
+            {% endif %}
+            </div>
+          </div>
       </div>
 
-      {% if formset.forms %}
-        <form action="/inventory/{{id}}/tree/{{id_t}}/" method="post">
-          <input type="submit" name="delete_imgs" value="Delete selected" class="btn btn-danger btn-lg" role="button" />
-
-            {% csrf_token %}
-            {{ formset.management_form }}
-            <table class="table table-striped">
-
-                    {% for form in formset.forms %}
-                        {% if forloop.first %}
-                          <thead>
-                            <th>Image</th>
-                            {% for field in form  %}
-                                <th>{{ field.label_tag }}</th>
-                            {% endfor %}
-                                <th>Edit</th>
-                          </thead>
-                        <tbody>
-                        {% endif %}
-                        <tr>
-                            <td class="fieldWrapper">
-                              <a class="thumbnail" href="{{ form.instance.picture.url }}">
-                                  <img class="img-responsive" src="{{ form.instance.picture.url }}"  alt="">
-                              </a>
-
-                            </td>
-                            {% for field in form %}
-                                <td class="fieldWrapper">
-                                  {% if forloop.last %}
-                                    {{ field }}
-                                  {% else %}
-                                    {{ field.value }}
-                                    {{ field.as_hidden }}
-                                  {% endif %}
-                                </td>
-                            {% endfor %}
-                            {% for hidden in form.hidden_fields %}
-                              {{ hidden }}
-                            {% endfor %}
-                            <td><a href="/inventory/{{id}}/tree/{{id_t}}/img/{{form.id.value}}/"> Click </a></td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </form>
-      {% else %}
-        <p>No images to show</p>
-      {% endif %}
     </div>
+    {% endif %}
   </div>
 </div>
 {% load staticfiles%}
+<script src="{% static 'js/jquery.cookie.js' %}"></script>
+<script src="{% static 'js/record_note.js' %}"></script>
+<link href="{% static 'css/record_note.css' %}" rel="stylesheet">
 {% endblock content %}
