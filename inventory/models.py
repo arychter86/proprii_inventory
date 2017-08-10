@@ -33,8 +33,8 @@ class Tree(models.Model):
     tree_number = models.IntegerField(default=0,validators=[validate_tree_number])
     name = models.CharField(max_length=200)
     latin_name = models.CharField(max_length=200, blank=True)
-    height_m = models.IntegerField(null=True, validators=[validate_postive_int])
-    crown_m = models.IntegerField(null=True,  validators=[validate_postive_int])
+    height_m = models.IntegerField(blank=True, null=True, validators=[validate_postive_int])
+    crown_m = models.IntegerField(blank=True, null=True,  validators=[validate_postive_int])
     notes = models.TextField(blank=True)
     created_date = models.DateTimeField(default=timezone.now)
 
