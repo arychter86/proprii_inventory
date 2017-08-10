@@ -47,7 +47,7 @@
                         <label class="control-label col-sm-3" for="id_latin_name">Latin name:</label>
                         <div class="col-sm-9">
                           <div><span class="label label-danger">{{ trunk_form.latin_name.errors.as_text }}</span></div>
-                          <input value="{{form.latin_name.value}}" class="form-control" type="text" name="latin_name" maxlength="200" required id="id_latin_name" />
+                          <input value="{{form.latin_name.value}}" class="form-control" type="text" name="latin_name" maxlength="200" id="id_latin_name" />
                         </div>
                     </div>
 
@@ -56,7 +56,7 @@
                         <label class="control-label col-sm-3" for="id_height_m">Height m:</label>
                         <div class="col-sm-9">
                           <div><span class="label label-danger">{{ trunk_form.height_m.errors.as_text }}</span></div>
-                          <input value="{{form.height_m.value}}" class="form-control" type="number" name="height_m"  required id="id_height_m" />
+                          <input value="{{form.height_m.value}}" class="form-control" type="number" name="height_m" id="id_height_m" />
                         </div>
                     </div>
                     <div class="row form-group">
@@ -64,7 +64,7 @@
                         <label class="control-label col-sm-3" for="id_crown_m">Crown m:</label>
                         <div class="col-sm-9">
                           <div><span class="label label-danger">{{ trunk_form.crown_m.errors.as_text }}</span></div>
-                          <input value="{{form.crown_m.value}}" class="form-control" type="number" name="crown_m" required id="id_crown_m" />
+                          <input value="{{form.crown_m.value}}" class="form-control" type="number" name="crown_m" id="id_crown_m" />
                         </div>
                     </div>
                     <div class="row form-group">
@@ -89,7 +89,7 @@
 
             {% endif %}
             <div class="row">
-                
+
                     <div class="compact marquee">
                       <div id="info">
                         <p id="info_start">
