@@ -16,9 +16,9 @@ if (!('webkitSpeechRecognition' in window)) {
 } else {
   start_button.style.display = 'inline-block';
   var recognition = new webkitSpeechRecognition();
-  recognition.continuous = true;
-  recognition.interimResults = true;
-
+  recognition.continuous = false;
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
   recognition.onstart = function() {
     recognizing = true;
     showInfo('info_speak_now');
