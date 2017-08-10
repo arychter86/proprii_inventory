@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib.auth.decorators import login_required, permission_required
 from . import views
-from inventory.views import TreeView, InventoryView, InventoryList, TreeImageView
+from inventory.views import *
 from django.conf import settings
 from django.contrib.auth import views as auth_views
 from django.conf.urls import include
@@ -32,7 +32,9 @@ urlpatterns = [
      url(r'^login/$', auth_views.login, name='login'),
      url(r'^inventory/(?P<id>[0-9]+)/tree/(?P<id_t>[0-9]+)/$', login_required(TreeView.as_view())),
      url(r'^inventory/(?P<id>[0-9]+)/tree/(?P<id_t>[0-9]+)/snap/$', login_required(TreeImageView.as_view())),
+     url(r'^inventory/(?P<id>[0-9]+)/tree/(?P<id_t>[0-9]+)/image/(?P<id_image>[0-9]+)/delete/$', login_required(TreeImageDeleteView.as_view())),
+     url(r'^inventory/(?P<id>[0-9]+)/tree/(?P<id_t>[0-9]+)/delete/$', login_required(TreeDeleteView.as_view())),
+     url(r'^inventory/(?P<id>[0-9]+)/tree/(?P<id_t>[0-9]+)/trunk/(?P<id_tt>[0-9]+)/delete/$', login_required(TreeTrunkDeleteView.as_view())),
      url(r'^inventory/(?P<id>[0-9]+)/tree/$', login_required(TreeView.as_view())),
-     url(r'^inventory/(?P<id>[0-9]+)/tree/add/$', login_required(TreeView.as_view())),
 ]
 urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

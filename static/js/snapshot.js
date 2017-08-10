@@ -41,7 +41,7 @@ $.ajaxSetup({
   videoSelect.onchange = getStream;
 
   home.appendChild(video);
-  home.appendChild(canvas);
+
   setupSnapAndAjaxPost();
 
  } else {
@@ -128,7 +128,8 @@ function setupSnapAndAjaxPost() {
   canvas.width = video.videoWidth;
    $(video).hide();
   console.log('Width ', video.videoWidth );
-
+  
+  home.appendChild(canvas);
   context.drawImage(video, 0, 0);
   //tutaj trzeba przekazac url do image file canvas.toDataURL()
   // trzeba to zrobic przez posta z url zdjecia i update form'a z nowym zdjeciem

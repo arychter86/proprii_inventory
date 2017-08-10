@@ -5,49 +5,42 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-
+from inventory.validators import *
 class Inventory(models.Model):
     author = models.ForeignKey('auth.User',null=True)
     name = models.CharField(max_length=200)
     city = models.CharField(max_length=100)
     street = models.CharField(max_length=100)
-    code = models.CharField(max_length=10)
-    created_date = models.DateTimeField(
-            default=timezone.now)
+    code = models.CharField(max_length=10,validators=[numeric])
+    created_date = models.DateTimeField(default=timezone.now)
     client_name = models.CharField(max_length=200)
 
     def __str__(self):
         return str(self.id) + "_" +self.name + ", klient: " + self.client_name + ", data: " + str(self.created_date)
 
 class InventoryForm(forms.ModelForm):
+
     class Meta:
         model = Inventory
         fields = [ 'name', 'city', 'street', 'code', 'created_date', 'client_name']
-        labels = {
-            'name': _('Name'),
-        }
-        help_texts = {
-            'name': _('Choose Author.'),
-        }
-        error_messages = {
-            'name': {
-                'max_length': _("This authors's name is too long."),
-            },
+        widgets = {
+            'code': forms.TextInput(attrs={'type':'number'}),
         }
 
 
 class Tree(models.Model):
     inventory = models.ForeignKey('Inventory')
+    tree_number = models.IntegerField(default=0,validators=[validate_tree_number])
     name = models.CharField(max_length=200)
     latin_name = models.CharField(max_length=200)
-    height_m = models.IntegerField()
-    crown_m = models.IntegerField(default=0)
+    height_m = models.IntegerField(validators=[validate_postive_int])
+    crown_m = models.IntegerField( validators=[validate_postive_int])
     notes = models.TextField(blank=True)
-    created_date = models.DateTimeField(
-            default=timezone.now)
+    created_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return str(self.id) + "_" + self.name + "____" + str(self.created_date)
+
 
 
 class TreeForm(forms.ModelForm):
@@ -59,7 +52,7 @@ class TreeForm(forms.ModelForm):
 
     class Meta:
         model = Tree
-        fields = ['id','name', 'latin_name', 'height_m', 'crown_m', 'notes']
+        fields = ['tree_number','name', 'latin_name', 'height_m', 'crown_m', 'notes']
         labels = {
             'name': _('Name'),
         }
@@ -70,10 +63,18 @@ class TreeForm(forms.ModelForm):
             'notes': forms.Textarea(attrs={'width':'100%','cols': 10, 'rows': 3}),
         }
 
+class TreeFormSmall(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(TreeFormSmall, self).__init__(*args, **kwargs)
+        instance = getattr(self, 'instance', None)
+
+    class Meta:
+        model = Tree
+        fields = ['tree_number','name', 'latin_name']
+
 class TreeImage(models.Model):
     tree = models.ForeignKey('Tree',null=True)
     picture = models.ImageField(upload_to = 'photos/', default = 'no-img.jpg')
-    description = models.CharField(max_length=200)
     created_date = models.DateTimeField(
             default=timezone.now)
     @receiver(pre_delete)
@@ -96,8 +97,8 @@ class TreeImageForm(forms.ModelForm):
 
 class TreeTrunk(models.Model):
     tree = models.ForeignKey('Tree')
-    trunk_cm = models.IntegerField()
-    meas_height_cm = models.IntegerField( default='130')
+    trunk_cm = models.IntegerField(validators=[validate_trunk])
+    meas_height_cm = models.IntegerField( default='130',validators=[validate_postive_int])
     created_date = models.DateTimeField(
             default=timezone.now)
 
