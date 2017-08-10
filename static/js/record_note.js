@@ -22,18 +22,18 @@ if (!('webkitSpeechRecognition' in window)) {
   recognition.onstart = function() {
     recognizing = true;
     showInfo('info_speak_now');
-    document.getElementById("start_button").innerHTML="Recording";
+    document.getElementById("start_button").className = "btn btn-danger btn-lg";
 
   };
 
   recognition.onerror = function(event) {
     if (event.error == 'no-speech') {
-      document.getElementById("start_button").innerHTML="Start";
+      document.getElementById("start_button").className = "btn btn-success btn-lg";
       showInfo('info_no_speech');
       ignore_onend = true;
     }
     if (event.error == 'audio-capture') {
-      document.getElementById("start_button").innerHTML="Start";
+      document.getElementById("start_button").className = "btn btn-success btn-lg";
       showInfo('info_no_microphone');
       ignore_onend = true;
     }
@@ -54,7 +54,7 @@ if (!('webkitSpeechRecognition' in window)) {
     if (ignore_onend) {
       return;
     }
-    document.getElementById("start_button").innerHTML="Start";
+    document.getElementById("start_button").className = "btn btn-success btn-lg";
     if (!final_transcript) {
       showInfo('info_start');
       return;
@@ -141,7 +141,7 @@ function showInfo(s) {
   if (s) {
     for (var child = info.firstChild; child; child = child.nextSibling) {
       if (child.style) {
-        child.style.display = child.id == s ? 'inline' : 'none';
+        child.style.display = child.id == s ? 'block' : 'none';
       }
     }
     info.style.visibility = 'visible';

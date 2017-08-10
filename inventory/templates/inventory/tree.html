@@ -73,66 +73,67 @@
                           <textarea class="form-control" name="notes" cols="10" rows="3" width="100%" id="id_notes">{{form.notes.value}}</textarea>
                         </div>
                     </div>
+
                     <div class="form-group row">
-                          <div class="offset-sm-6 col-sm-12">
+                          <div class="col-sm-offset-3 col-sm-9">
                             <input type="submit" name="tree" value="Submit" class="btn btn-success btn-lg" role="button"/>
                             <input type="submit" name="save_exit" value="Save And Exit" class="btn btn-primary btn-lg" role="button"/>
 
                           </div>
                     </div>
+                    <input type="submit" style="display: none" />
             </form>
             {% if form.instance.pk  %}
-            <form action="/inventory/{{id}}/tree/{{id_t}}/delete/" method="post">
-                {% csrf_token %}
-                <button name="delete" class="btn btn-danger btn-lg" role="button">Delete</button>
-            </form>
 
             {% endif %}
             <div class="row">
-
+                <div class="col-sm-3">
+                  <div id="div_start">
+                    <button id="start_button" onclick="startButton(event)"  class="btn btn-success btn-lg" role="button">Rec</button>
+                  </div>
+                </div>
+                <div class="col-sm-9">
                     <div class="compact marquee">
+
+                      <div id="results">
+                        <span class="final" id="final_span"></span> <span class="interim" id="interim_span"></span>
+                      </div>
+
                       <div id="info">
-                        <p id="info_start">
-                          Click on the microphone icon and begin speaking for as long as you like.
+
+                        <p id="info_start" class="alert alert-success">
+                          Click Rec to record.
                         </p>
-                        <p id="info_speak_now" style="display:none">
+                        <p id="info_speak_now" class="alert alert-info" style="display:none">
                           Speak now.
                         </p>
-                        <p id="info_no_speech" style="display:none">
+                        <p id="info_no_speech" style="display:none" class="alert alert-danger">
                           No speech was detected. You may need to adjust your <a href=
                           "//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892">microphone
                           settings</a>.
                         </p>
-                        <p id="info_no_microphone" style="display:none">
+                        <p id="info_no_microphone" style="display:none" class="alert alert-danger">
                           No microphone was found. Ensure that a microphone is installed and that
                           <a href="//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892">
                           microphone settings</a> are configured correctly.
                         </p>
-                        <p id="info_allow" style="display:none">
+                        <p id="info_allow" style="display:none" class="alert alert-info">
                           Click the "Allow" button above to enable your microphone.
                         </p>
-                        <p id="info_denied" style="display:none">
+                        <p id="info_denied" style="display:none" class="alert alert-danger">
                           Permission to use microphone was denied.
                         </p>
-                        <p id="info_blocked" style="display:none">
+                        <p id="info_blocked" style="display:none" class="alert alert-danger">
                           Permission to use microphone is blocked. To change, go to
                           chrome://settings/contentExceptions#media-stream
                         </p>
-                        <p id="info_upgrade" style="display:none">
+                        <p id="info_upgrade" style="display:none" class="alert alert-danger">
                           Web Speech API is not supported by this browser. Upgrade to <a href=
                           "//www.google.com/chrome">Chrome</a> version 25 or later.
                         </p>
                       </div>
-                      <div id="div_start">
-                        <button id="start_button" onclick="startButton(event)"  class="btn btn-warning btn-lg" role="button">Start</button>
 
-                      </div>
-                      <div id="results">
-                        <span class="final" id="final_span"></span> <span class="interim" id=
-                        "interim_span"></span>
-                      </div>
-
-
+                    </div>
                     </div>
             </div>
             </div>

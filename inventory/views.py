@@ -191,7 +191,8 @@ class TreeView(View):
             id = kwargs.get('id')
             id_t = kwargs.get('id_t')
             inv_obj = get_object_or_404(Inventory, pk=id)
-
+            # empty tree object
+            tree_obj = Tree()
             # handle tree edit
             if 'tree' in request.POST or 'save_exit' in request.POST :
                 # get the tree form
@@ -199,6 +200,7 @@ class TreeView(View):
                     queryset = Tree.objects.filter(inventory=inv_obj)
                     tree_obj = get_object_or_404(queryset, pk=id_t)
                     form = TreeForm(request.POST, request.FILES,instance=tree_obj)
+                    tree_obj = form.instance
                 else:
                     print('Adding new TREE for INVENTORY:',inv_obj)
                     form = TreeForm(request.POST, request.FILES)
@@ -217,10 +219,6 @@ class TreeView(View):
                     else:
                         return HttpResponseRedirect('/inventory/'+id+'/tree/'+id_t+'/')
                 else:
-                    if id_t == '0':
-                        tree_obj = Tree()
-                    else:
-                        tree_obj = form.instance
                     print('Tree form not valid ', form.errors)
 
 
