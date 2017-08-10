@@ -90,7 +90,11 @@ if (!('webkitSpeechRecognition' in window)) {
     final_transcript = capitalize(final_transcript);
     final_span.innerHTML = linebreak(final_transcript);
     interim_span.innerHTML = linebreak(interim_transcript);
+<<<<<<< HEAD
 
+=======
+
+>>>>>>> 7b95b53d0a23d3bd27e26f7e28f9977832d1ce4b
   };
 }
 
