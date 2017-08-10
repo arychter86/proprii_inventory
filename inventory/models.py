@@ -9,11 +9,11 @@ from inventory.validators import *
 class Inventory(models.Model):
     author = models.ForeignKey('auth.User',null=True)
     name = models.CharField(max_length=200)
-    city = models.CharField(max_length=100)
-    street = models.CharField(max_length=100)
-    code = models.CharField(max_length=10,validators=[numeric])
+    city = models.CharField(max_length=100, blank=True)
+    street = models.CharField(max_length=100, blank=True)
+    code = models.CharField(max_length=10, blank=True, validators=[numeric])
     created_date = models.DateTimeField(default=timezone.now)
-    client_name = models.CharField(max_length=200)
+    client_name = models.CharField(max_length=200, blank=True)
 
     def __str__(self):
         return str(self.id) + "_" +self.name + ", klient: " + self.client_name + ", data: " + str(self.created_date)
@@ -32,9 +32,9 @@ class Tree(models.Model):
     inventory = models.ForeignKey('Inventory')
     tree_number = models.IntegerField(default=0,validators=[validate_tree_number])
     name = models.CharField(max_length=200)
-    latin_name = models.CharField(max_length=200)
-    height_m = models.IntegerField(validators=[validate_postive_int])
-    crown_m = models.IntegerField( validators=[validate_postive_int])
+    latin_name = models.CharField(max_length=200, blank=True)
+    height_m = models.IntegerField(blank=True, validators=[validate_postive_int])
+    crown_m = models.IntegerField(blank=True,  validators=[validate_postive_int])
     notes = models.TextField(blank=True)
     created_date = models.DateTimeField(default=timezone.now)
 
