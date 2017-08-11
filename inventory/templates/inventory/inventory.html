@@ -23,10 +23,10 @@
           <form action="/inventory/{{id}}/" method="post" class="form-horizontal">
               {% csrf_token %}
               <div class="fieldWrapper">
-                  <div class="row form-group">
+                  <div class="row  form-group">
 
-                      <label class="control-label col-sm-3" for="id_name">Name:</label>
-                      <div class="col-sm-9">
+                      <label class="col-xs-3" for="id_name">Name:</label>
+                      <div class="col-xs-9">
                         <div><span class="label label-danger">{{ form.name.errors.as_text }}</span></div>
                         <input class="form-control" type="text" name="name" value="{{form.name.value}}" maxlength="200" required id="id_name" />
                       </div>
@@ -34,16 +34,16 @@
               </div>
               <div class="fieldWrapper">
                   <div class="row form-group">
-                      <label class="control-label col-sm-3" for="id_city">City:</label>
-                      <div class="col-sm-9">
+                      <label class="control-label col-xs-3" for="id_city">City:</label>
+                      <div class="col-xs-9">
                         <input class="form-control" type="text" name="city" value="{{form.city.value}}" maxlength="200" required id="id_city" />
                       </div>
                   </div>
               </div>
               <div class="fieldWrapper">
                   <div class="row form-group">
-                      <label class="control-label col-sm-3" for="id_street">Street:</label>
-                      <div class="col-sm-9">
+                      <label class="control-label col-xs-3" for="id_street">Street:</label>
+                      <div class="col-xs-9">
                         <div><span class="label label-danger">{{ form.street.errors.as_text }}</span></div>
                         <input class="form-control" type="text" name="street" value="{{form.street.value}}" maxlength="200" required id="id_street" />
                       </div>
@@ -52,8 +52,8 @@
               <div class="fieldWrapper">
                   <div class="row form-group">
 
-                      <label class="control-label col-sm-3" for="id_code">Code:</label>
-                      <div class="col-sm-9">
+                      <label class="control-label col-xs-3" for="id_code">Code:</label>
+                      <div class="col-xs-9">
                         <div><span class="label label-danger">{{ form.code.errors.as_text }}</span></div>
                         <input class="form-control" type="text" name="code" value="{{form.code.value}}" maxlength="200"  id="id_code" />
                       </div>
@@ -62,8 +62,8 @@
               <div class="fieldWrapper">
                   <div class="row form-group">
 
-                      <label class="control-label col-sm-3" for="id_client_name">Client name:</label>
-                      <div class="col-sm-9">
+                      <label class="control-label col-xs-3" for="id_client_name">Client name:</label>
+                      <div class="col-xs-9">
                         <div><span class="label label-danger">{{ form.client_name.errors.as_text }}</span></div>
                         <input class="form-control" type="text" name="client_name" value="{{form.client_name.value}}" maxlength="200" required id="id_client_name" />
                       </div>
@@ -73,10 +73,17 @@
               {{ form.created_date.as_hidden  }}
               <div class="form-group row">
                     <div class="offset-sm-6 col-sm-12">
-                      <input type="submit" name="inventory" value="Submit" class="btn btn-success btn-lg" role="button"/>
-                      {% if id  %}
-                      <input type="submit" name="delete" value="Delete" class="btn btn-danger btn-lg" role="button"/>
-                      {% endif %}
+                      <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                        <div class="btn-group" role="group">
+                          <input type="submit" name="inventory" value="Submit" class="btn btn-success btn-lg" role="button"/>
+                        </div>
+                        {% if id  %}
+                          <div class="btn-group" role="group">
+                            <input type="submit" name="delete" value="Delete" class="btn btn-danger btn-lg" role="button"/>
+                          </div>
+                        {% endif %}
+                        </div>
+
                     </div>
               </div>
           </form>
@@ -92,25 +99,35 @@
           </h4>
         </div>
         <div class="panel-body">
-              <table class="table table-striped">
+
                   {% for tree in trees %}
-                      <tr>
-                          <td class="col-sm-1">{{tree.tree_number}}</td>
-                          <td class="col-md-4"><span>{{tree.name}}</span></td>
-                          <td class="col-md-3">{{tree.latin_name}}</td>
-                          <td class="col-md-2">
-                            <form action="/inventory/{{id}}/tree/{{tree.id}}/delete/" method="post">
-                                {% csrf_token %}
-                                <button name="delete" class="btn btn-danger btn-sm" role="button">Delete</button>
-                            </form>
-                            </td>
-                          <td class="col-md-2">
-                            <a href="/inventory/{{id}}/tree/{{tree.id}}/" class="btn btn-success btn-sm" role="button"> Edit </a>
-                          </td>
-                      </tr>
+                      <div class="row">
+                          <div class="col-xs-1 td_div"><b>{{tree.tree_number}}</b></div>
+                          <div class="col-xs-4 td_div">{{tree.name}}</div>
+                          <div class=" col-xs-2 td_div">{{tree.latin_name}}</div>
+                          <div class="col-xs-5 td_div">
+                            <div class="row" role="group" aria-label="...">
+                              <div class="col-xs-8">
+                                <form action="/inventory/{{id}}/tree/{{tree.id}}/" method="get">
+                                  {% csrf_token %}
+                                <button  class="btn btn-success btn-sm btn-block" role="button"> Edit </button>
+                                </form>
+                              </div>
+                              <div class="col-xs-4">
+                                <form action="/inventory/{{id}}/tree/{{tree.id}}/delete/" method="post">
+                                    {% csrf_token %}
+                                    <button name="delete" class="btn btn-danger btn-sm  btn-block" role="button">
+                                       <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                    </button>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                      </div>
+                      <hr />
                   {% endfor %}
-                  </tbody>
-              </table>
+
+
           {% if id  %}
               <a href="/inventory/{{id}}/tree/0/" class="btn btn-success btn-lg" role="button">Add Tree</a>
           {% endif %}

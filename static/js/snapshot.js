@@ -80,7 +80,6 @@ $.ajaxSetup({
      video: {
 
        optional: [
-          {facingMode: "environment" },
           {minWidth: 320},
           {minWidth: 640},
           {minWidth: 1024},
@@ -128,7 +127,7 @@ function setupSnapAndAjaxPost() {
   canvas.width = video.videoWidth;
    $(video).hide();
   console.log('Width ', video.videoWidth );
-  
+
   home.appendChild(canvas);
   context.drawImage(video, 0, 0);
   //tutaj trzeba przekazac url do image file canvas.toDataURL()

@@ -15,22 +15,43 @@
     <div class="col-sm-5">
       <div class="panel panel-default">
         <div class="panel-heading">
+
           <h3>
-            Tree <b>{{form.instance.tree_number}}</b> details
+            Tree <b>{{form.instance.tree_number}}</b>
+          </br><small> created {{form.instance.created_date}} </small>
           </h3>
+
           </div>
           <div class="panel-body">
 
             <form action="/inventory/{{id}}/tree/{{id_t}}/" method="post" class="form-horizontal">
+              {% csrf_token %}
+              <div class="form-group row">
+                    <input type="text" style="display:none" name="save_tree" />
+                    <div class=" col-sm-12">
+                      <div class="btn-group btn-group-justified" role="group">
+                        <div class="btn-group" role="group">
+                          <input type="submit" name="save_tree" value="Save" class="btn btn-success btn-lg" role="button"/>
+                        </div>
+                        <div class="btn-group" role="group">
+                          <input type="submit" name="save_and_exit" value="Exit" class="btn btn-success btn-lg" role="button"/>
+                        </div>
+                        <div class="btn-group" role="group">
+                          <input type="submit" name="save_and_new" value="New" class="btn btn-success btn-lg" role="button"/>
+                        </div>
+                      </div>
 
-                  {% csrf_token %}
+
+                    </div>
+              </div>
+
 
                   <div class="row form-group">
                       <div><span class="label label-danger">{{ form.tree_number.errors.as_text }}</span></div>
                       <label class="control-label col-sm-3" for="id_tree_number">Tree number:</label>
                       <div class="col-sm-9">
                         <div><span class="label label-danger">{{ form.tree_number.errors.as_text }}</span></div>
-                        <input value="{{form.tree_number.value}}" class="form-control" type="number" name="tree_number" maxlength="200" required id="id_tree_number" />
+                        <input onchange="this.form.submit()" value="{{form.tree_number.value}}" class="form-control" type="number" name="tree_number" maxlength="200" required id="id_tree_number" />
                       </div>
                   </div>
 
@@ -39,7 +60,7 @@
                         <label class="control-label col-sm-3" for="id_name">Name:</label>
                         <div class="col-sm-9">
                           <div><span class="label label-danger">{{ form.name.errors.as_text }}</span></div>
-                          <input value="{{form.name.value}}" class="form-control" type="text" name="name" maxlength="200" required id="id_name" />
+                          <input onchange="this.form.submit()" value="{{form.name.value}}" class="form-control" type="text" name="name" maxlength="200" required id="id_name" />
                         </div>
                     </div>
                     <div class="row form-group">
@@ -74,33 +95,18 @@
                         </div>
                     </div>
 
-                    <div class="form-group row">
-                          <div class="col-sm-offset-3 col-sm-9">
-                            <input type="submit" name="tree" value="Submit" class="btn btn-success btn-lg" role="button"/>
-                            <input type="submit" name="save_exit" value="Save And Exit" class="btn btn-primary btn-lg" role="button"/>
 
-                          </div>
-                    </div>
-                    <input type="submit" style="display: none" />
+
             </form>
             {% if form.instance.pk  %}
 
             {% endif %}
+
             <div class="row">
-                <div class="col-sm-3">
-                  <div id="div_start">
-                    <button id="start_button" onclick="startButton(event)"  class="btn btn-success btn-lg" role="button">Rec</button>
-                  </div>
-                </div>
-                <div class="col-sm-9">
+
+                <div class=" col-sm-offset-3 col-sm-9">
                     <div class="compact marquee">
-
-                      <div id="results">
-                        <span class="final" id="final_span"></span> <span class="interim" id="interim_span"></span>
-                      </div>
-
                       <div id="info">
-
                         <p id="info_start" class="alert alert-success">
                           Click Rec to record.
                         </p>
@@ -132,6 +138,10 @@
                           "//www.google.com/chrome">Chrome</a> version 25 or later.
                         </p>
                       </div>
+                      <div id="results">
+                        <span class="final" id="final_span"></span> <span class="interim" id="interim_span"></span>
+                      </div>
+                      <button id="start_button" onclick="startButton(event)"  class="btn btn-block btn-success btn-lg" role="button">Rec</button>
 
                     </div>
                     </div>
@@ -146,9 +156,10 @@
           <div class="col-sm-12">
             <div class="panel panel-default">
               <div class="panel-heading">
-                <h4 class="panel-title">
-                  Tree trunks
-                </h4>
+
+                <h3>
+                  Tree trunks: <b>{{trunk_list.count}}</b>
+                </h3>
               </div>
               <div class="panel-body">
                 {% if  form.instance.pk  %}
@@ -175,7 +186,9 @@
                           </tbody>
                       </table>
                 {% else %}
-                  <p>No trunks yet</p>
+                <p id="info_blocked" style="display:block" class="alert alert-danger">
+                  Save the tree first!
+                </p>
                 {% endif %}
 
               </div>
@@ -188,9 +201,7 @@
                     <div><span class="label label-danger">{{ trunk_form.trunk_cm.errors.as_text }}</span></div>
                     <div><span class="label label-danger">{{ trunk_form.meas_height_cm.errors.as_text }}</span></div>
                     <label class="sr-only" for="id_trunk_cm">Trunk cm:</label>
-                    <input value="{{trunk_form.trunk_cm.value}}"" type="number" name="trunk_cm" placeholder="Trunk CM" required id="id_trunk_cm" class="form-control mb-2 mr-sm-2 mb-sm-0"/>
-
-
+                    <input value="{{trunk_form.trunk_cm.value}}" type="number" name="trunk_cm" placeholder="Trunk CM" required id="id_trunk_cm" class="form-control mb-2 mr-sm-2 mb-sm-0"/>
                     <label  class="sr-only" for="id_meas_height_cm">at</label>
                     <div class="input-group mb-2 mr-sm-2 mb-sm-0">
                       <div class="input-group-addon">@</div>
@@ -198,7 +209,7 @@
                     </div>
 
                     <div class="form-group">
-                      <input type="submit" name="add_trunk" value="New Trunk" class="btn btn-info " role="button"/>
+                      <input type="submit" name="add_trunk" value="New Trunk" class="btn btn-block btn-success " role="button"/>
                     </div>
                 </form>
                 {% endif %}
@@ -207,75 +218,79 @@
             </div>
           </div>
       </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="row">
-      <div class="col-sm-12">
-
-      </div>
-    </div>
-    {% if form.instance.pk  %}
-    <div class="row">
-      <div class="col-sm-12">
-
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h4 class="panel-title">
-            <a href="/inventory/{{id}}/tree/{{id_t}}/snap/" class="btn btn-info btn-lg" role="button">Snap a new PHOTO</a>
-          <span class="label label-success" > Number of images: {{image_list.count}}</span>
-            </h4>
-          </div>
-          <div class="panel-body">
-
-            {% if form.instance.pk  %}
-
-                      <div class="row">
-                          {% for image in image_list %}
-                              <div class="col-sm-3">
-                                  <div class="panel panel-default">
-                                <div class="panel-heading">
-                                  <h4 class="panel-title text-center">
-                                    Image {{image.id}}
-                                  </h4>
-                                </div>
-                                <div class="panel-body">
-                                  <div class="fieldWrapper">
-                                    <a class="thumbnail" href="{{ image.picture.url }}">
-                                        <img class="img-responsive" src="{{ image.picture.url }}"  alt="">
-                                    </a>
-
-                                  </div>
-                                </div>
-                                  <div class="panel-footer">
-                                    <td class="fieldWrapper">
-                                      <form class="text-center" action="/inventory/{{id}}/tree/{{id_t}}/image/{{image.id}}/delete/" method="post">
-                                          {% csrf_token %}
-                                          <button name="delete" class="btn btn-danger btn-sm" role="button">Delete</button>
-                                      </form>
-                                    </td>
-
-                                </div>
-                              </div>
-                              </div>
-                          {% endfor %}
-                      </tbody>
+      <div class="row">
+        {% if form.instance.pk  %}
+          <div class="col-sm-12">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <div class="row">
+                  <div class="col-sm-6 ">
+                    <h3>
+                       Number of images: <b>{{image_list.count}}</b>
+                    </h3>
+                  </div>
+                  <div class="col-sm-6">
+                       <form action="/inventory/{{id}}/tree/{{id_t}}/snap/" method="get">
+                           {% csrf_token %}
+                             <button class="btn btn-block btn-success btn-lg" role="button">Snap a new PHOTO</button>
+                       </form>
                     </div>
+                </div>
+              </div>
+              <div class="panel-body">
+                {% if form.instance.pk  %}
+
+                              {% for image in image_list %}
+                                  <div class="col-sm-4">
+                                      <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                      <h4 class="panel-title text-center">
+                                        Image {{image.id}} </br><small> taken {{image.created_date}} </small>
+                                      </h4>
+                                    </div>
+                                    <div class="panel-body">
+                                      <div class="fieldWrapper">
+                                        <a class="thumbnail" href="{{ image.picture.url }}">
+                                            <img class="img-responsive" src="{{ image.picture.url }}"  alt="">
+                                        </a>
+
+                                      </div>
+                                    </div>
+                                      <div class="panel-footer">
+                                        <td class="fieldWrapper">
+                                          <form class="text-center" action="/inventory/{{id}}/tree/{{id_t}}/image/{{image.id}}/delete/" method="post">
+                                              {% csrf_token %}
+                                              <button name="delete" class="btn btn-danger btn-sm" role="button">Delete</button>
+                                          </form>
+                                        </td>
+
+                                    </div>
+                                  </div>
+                                  </div>
+                              {% endfor %}
+                          </tbody>
+                        </div>
 
 
-            {% else %}
-              <p>No images to show</p>
-            {% endif %}
-            </div>
+                {% else %}
+                  <p>No images to show</p>
+                {% endif %}
+                </div>
+              </div>
           </div>
-      </div>
 
+        {% endif %}
+      </div>
     </div>
-    {% endif %}
   </div>
+
 </div>
+
+
 {% load staticfiles%}
+
 <script src="{% static 'js/jquery.cookie.js' %}"></script>
 <script src="{% static 'js/record_note.js' %}"></script>
 <link href="{% static 'css/record_note.css' %}" rel="stylesheet">
+
 {% endblock content %}

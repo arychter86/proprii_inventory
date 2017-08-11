@@ -190,34 +190,39 @@ class TreeView(View):
         if 'id_t' in kwargs and 'id' in kwargs:
             id = kwargs.get('id')
             id_t = kwargs.get('id_t')
+
+            # There must be the Iventory!
             inv_obj = get_object_or_404(Inventory, pk=id)
-            # empty tree object
+            # create empty tree object
             tree_obj = Tree()
-            # handle tree edit
-            if 'tree' in request.POST or 'save_exit' in request.POST :
+            # handle tree form
+            if 'save_tree' in request.POST or 'save_and_exit' in request.POST :
                 # get the tree form
-                if id_t != '0':
+                if Tree.objects.filter(pk=id_t).exists():
                     queryset = Tree.objects.filter(inventory=inv_obj)
                     tree_obj = get_object_or_404(queryset, pk=id_t)
                     form = TreeForm(request.POST, request.FILES,instance=tree_obj)
                     tree_obj = form.instance
-                else:
+                else:   # this is a new Tree!
                     print('Adding new TREE for INVENTORY:',inv_obj)
                     form = TreeForm(request.POST, request.FILES)
                     setattr(form.instance, 'inventory', inv_obj)
 
-                # passing form to DB
+                #validatin data form a form
                 if form.is_valid():
                     # <process form cleaned data>
                     tree_obj = form.save(commit=False)
                     tree_obj.inventory =  Inventory.objects.get(id=id)
                     tree_obj.save()
                     id_t = str(tree_obj.id)
-                    print("INVENTORY:",inv_obj,"TREE saved:",tree_obj)
-                    if 'save_exit' in request.POST :
+                    print("TREE saved:",tree_obj)
+                    if 'save_and_exit' in request.POST :
                         return HttpResponseRedirect('/inventory/'+id+'/')
+                    elif 'save_and_new' in request.POST :
+                        return HttpResponseRedirect('/inventory/'+id+'/tree/0/')  
                     else:
                         return HttpResponseRedirect('/inventory/'+id+'/tree/'+id_t+'/')
+
                 else:
                     print('Tree form not valid ', form.errors)
 

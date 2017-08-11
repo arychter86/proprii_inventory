@@ -1,6 +1,6 @@
 .page-header {
     background-color: #666666;
-    margin-top: 0;
+    margin: 5;
 
 }
 
@@ -8,6 +8,16 @@
     color: #fff;
     font-size: 36pt;
     text-decoration: none;
+}
+.nopadding {
+   padding: 0 !important;
+   margin: 0 !important;
+}
+.container {
+    padding-right: 2px;
+    padding-left: 2px;
+    /* margin-right: auto; */
+    /* margin-left: auto; */
 }
 
 .table {
@@ -18,7 +28,12 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
 
+.td_div {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .date {
