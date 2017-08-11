@@ -1,5 +1,4 @@
-  {% extends 'inventory/base.html' %}
-{% block content %}
+ {% extends 'inventory/base.html' %} {% block content %}
 
 
 <div class="container ">
@@ -21,268 +20,258 @@
           </br><small> created {{form.instance.created_date}} </small>
           </h3>
 
-          </div>
-          <div class="panel-body">
-
-            <form action="/inventory/{{id}}/tree/{{id_t}}/" method="post" class="form-horizontal">
-              {% csrf_token %}
-              <div class="form-group row">
-                    <input type="text" style="display:none" name="save_tree" />
-                    <div class=" col-sm-12">
-                      <div class="btn-group btn-group-justified" role="group">
-                        <div class="btn-group" role="group">
-                          <input type="submit" name="save_tree" value="Save" class="btn btn-success btn-lg" role="button"/>
-                        </div>
-                        <div class="btn-group" role="group">
-                          <input type="submit" name="save_and_exit" value="Exit" class="btn btn-success btn-lg" role="button"/>
-                        </div>
-                        <div class="btn-group" role="group">
-                          <input type="submit" name="save_and_new" value="New" class="btn btn-success btn-lg" role="button"/>
-                        </div>
-                      </div>
-
-
-                    </div>
-              </div>
-
-
-                  <div class="row form-group">
-                      <div><span class="label label-danger">{{ form.tree_number.errors.as_text }}</span></div>
-                      <label class="control-label col-sm-3" for="id_tree_number">Tree number:</label>
-                      <div class="col-sm-9">
-                        <div><span class="label label-danger">{{ form.tree_number.errors.as_text }}</span></div>
-                        <input onchange="this.form.submit()" value="{{form.tree_number.value}}" class="form-control" type="number" name="tree_number" maxlength="200" required id="id_tree_number" />
-                      </div>
-                  </div>
-
-                    <div class="row form-group">
-
-                        <label class="control-label col-sm-3" for="id_name">Name:</label>
-                        <div class="col-sm-9">
-                          <div><span class="label label-danger">{{ form.name.errors.as_text }}</span></div>
-                          <input onchange="this.form.submit()" value="{{form.name.value}}" class="form-control" type="text" name="name" maxlength="200" required id="id_name" />
-                        </div>
-                    </div>
-                    <div class="row form-group">
-
-                        <label class="control-label col-sm-3" for="id_latin_name">Latin name:</label>
-                        <div class="col-sm-9">
-                          <div><span class="label label-danger">{{ form.latin_name.errors.as_text }}</span></div>
-                          <input value="{{form.latin_name.value}}" class="form-control" type="text" name="latin_name" maxlength="200" id="id_latin_name" />
-                        </div>
-                    </div>
-
-                    <div class="row form-group">
-
-                        <label class="control-label col-sm-3" for="id_height_m">Height m:</label>
-                        <div class="col-sm-9">
-                          <div><span class="label label-danger">{{ form.height_m.errors.as_text }}</span></div>
-                          <input value="{{form.height_m.value}}" class="form-control" type="number" name="height_m" id="id_height_m" />
-                        </div>
-                    </div>
-                    <div class="row form-group">
-
-                        <label class="control-label col-sm-3" for="id_crown_m">Crown m:</label>
-                        <div class="col-sm-9">
-                          <div><span class="label label-danger">{{ form.crown_m.errors.as_text }}</span></div>
-                          <input value="{{form.crown_m.value}}" class="form-control" type="number" name="crown_m" id="id_crown_m" />
-                        </div>
-                    </div>
-                    <div class="row form-group">
-                        <label class="control-label col-sm-3" for="id_notes">Notes:</label>
-                        <div class="col-sm-9">
-                          <textarea class="form-control" name="notes" cols="10" rows="3" width="100%" id="id_notes">{{form.notes.value}}</textarea>
-                        </div>
-                    </div>
-
-
-
-            </form>
-            {% if form.instance.pk  %}
-
-            {% endif %}
-
-            <div class="row">
-
-                <div class=" col-sm-offset-3 col-sm-9">
-                    <div class="compact marquee">
-                      <div id="info">
-                        <p id="info_start" class="alert alert-success">
-                          Click Rec to record.
-                        </p>
-                        <p id="info_speak_now" class="alert alert-info" style="display:none">
-                          Speak now.
-                        </p>
-                        <p id="info_no_speech" style="display:none" class="alert alert-danger">
-                          No speech was detected. You may need to adjust your <a href=
-                          "//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892">microphone
-                          settings</a>.
-                        </p>
-                        <p id="info_no_microphone" style="display:none" class="alert alert-danger">
-                          No microphone was found. Ensure that a microphone is installed and that
-                          <a href="//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892">
-                          microphone settings</a> are configured correctly.
-                        </p>
-                        <p id="info_allow" style="display:none" class="alert alert-info">
-                          Click the "Allow" button above to enable your microphone.
-                        </p>
-                        <p id="info_denied" style="display:none" class="alert alert-danger">
-                          Permission to use microphone was denied.
-                        </p>
-                        <p id="info_blocked" style="display:none" class="alert alert-danger">
-                          Permission to use microphone is blocked. To change, go to
-                          chrome://settings/contentExceptions#media-stream
-                        </p>
-                        <p id="info_upgrade" style="display:none" class="alert alert-danger">
-                          Web Speech API is not supported by this browser. Upgrade to <a href=
-                          "//www.google.com/chrome">Chrome</a> version 25 or later.
-                        </p>
-                      </div>
-                      <div id="results">
-                        <span class="final" id="final_span"></span> <span class="interim" id="interim_span"></span>
-                      </div>
-                      <button id="start_button" onclick="startButton(event)"  class="btn btn-block btn-success btn-lg" role="button">Rec</button>
-
-                    </div>
-                    </div>
-            </div>
-            </div>
-
         </div>
+        <div class="panel-body">
+
+          <form action="/inventory/{{id}}/tree/{{id_t}}/" method="post" class="form-horizontal">
+            {% csrf_token %}
+            <div class="form-group row">
+              <input type="text" style="display:none" name="save_tree" />
+              <div class=" col-sm-12">
+                <div class="btn-group btn-group-justified" role="group">
+                  <div class="btn-group" role="group">
+                    <input type="submit" name="save_tree" value="Save" class="btn btn-success btn-lg" role="button" />
+                  </div>
+                  <div class="btn-group" role="group">
+                    <input type="submit" name="save_and_exit" value="Exit" class="btn btn-success btn-lg" role="button" />
+                  </div>
+                  <div class="btn-group" role="group">
+                    <input type="submit" name="save_and_new" value="New" class="btn btn-success btn-lg" role="button" />
+                  </div>
+                </div>
+
+
+              </div>
+            </div>
+
+
+            <div class="row form-group">
+              <div><span class="label label-danger">{{ form.tree_number.errors.as_text }}</span></div>
+              <label class="control-label col-sm-3" for="id_tree_number">Tree number:</label>
+              <div class="col-sm-9">
+                <div><span class="label label-danger">{{ form.tree_number.errors.as_text }}</span></div>
+                <input onchange="this.form.submit()" value="{{form.tree_number.value}}" class="form-control" type="number" name="tree_number" maxlength="200" required id="id_tree_number" />
+              </div>
+            </div>
+
+            <div class="row form-group">
+
+              <label class="control-label col-sm-3" for="id_name">Name:</label>
+              <div class="col-sm-9">
+                <div><span class="label label-danger">{{ form.name.errors.as_text }}</span></div>
+                <input onchange="this.form.submit()" value="{{form.name.value}}" class="form-control" type="text" name="name" maxlength="200" required id="id_name" />
+              </div>
+            </div>
+            <div class="row form-group">
+
+              <label class="control-label col-sm-3" for="id_latin_name">Latin name:</label>
+              <div class="col-sm-9">
+                <div><span class="label label-danger">{{ form.latin_name.errors.as_text }}</span></div>
+                <input value="{{form.latin_name.value}}" class="form-control" type="text" name="latin_name" maxlength="200" id="id_latin_name" />
+              </div>
+            </div>
+
+            <div class="row form-group">
+
+              <label class="control-label col-sm-3" for="id_height_m">Height m:</label>
+              <div class="col-sm-9">
+                <div><span class="label label-danger">{{ form.height_m.errors.as_text }}</span></div>
+                <input value="{{form.height_m.value}}" class="form-control" type="number" name="height_m" id="id_height_m" />
+              </div>
+            </div>
+            <div class="row form-group">
+
+              <label class="control-label col-sm-3" for="id_crown_m">Crown m:</label>
+              <div class="col-sm-9">
+                <div><span class="label label-danger">{{ form.crown_m.errors.as_text }}</span></div>
+                <input value="{{form.crown_m.value}}" class="form-control" type="number" name="crown_m" id="id_crown_m" />
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="control-label col-sm-3" for="id_notes">Notes:</label>
+              <div class="col-sm-9">
+                <textarea class="form-control" name="notes" cols="10" rows="3" width="100%" id="id_notes">{{form.notes.value}}</textarea>
+              </div>
+            </div>
+
+
+
+          </form>
+          {% if form.instance.pk %} {% endif %}
+
+          <div class="row">
+
+            <div class=" col-sm-offset-3 col-sm-9">
+              <div class="compact marquee">
+                <div id="info">
+                  <p id="info_start" class="alert alert-success">
+                    Click Rec to record.
+                  </p>
+                  <p id="info_speak_now" class="alert alert-info" style="display:none">
+                    Speak now.
+                  </p>
+                  <p id="info_no_speech" style="display:none" class="alert alert-danger">
+                    No speech was detected. You may need to adjust your <a href="//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892">microphone
+                          settings</a>.
+                  </p>
+                  <p id="info_no_microphone" style="display:none" class="alert alert-danger">
+                    No microphone was found. Ensure that a microphone is installed and that
+                    <a href="//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892">
+                          microphone settings</a> are configured correctly.
+                  </p>
+                  <p id="info_allow" style="display:none" class="alert alert-info">
+                    Click the "Allow" button above to enable your microphone.
+                  </p>
+                  <p id="info_denied" style="display:none" class="alert alert-danger">
+                    Permission to use microphone was denied.
+                  </p>
+                  <p id="info_blocked" style="display:none" class="alert alert-danger">
+                    Permission to use microphone is blocked. To change, go to chrome://settings/contentExceptions#media-stream
+                  </p>
+                  <p id="info_upgrade" style="display:none" class="alert alert-danger">
+                    Web Speech API is not supported by this browser. Upgrade to <a href="//www.google.com/chrome">Chrome</a> version 25 or later.
+                  </p>
+                </div>
+                <div id="results">
+                  <span class="final" id="final_span"></span> <span class="interim" id="interim_span"></span>
+                </div>
+                <button id="start_button" onclick="startButton(event)" class="btn btn-block btn-success btn-lg" role="button">Rec</button>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
 
     </div>
     <div class="col-sm-7">
       <div class="row">
-          <div class="col-sm-12">
-            <div class="panel panel-default">
-              <div class="panel-heading">
+        <div class="col-sm-12">
+          <div class="panel panel-default">
+            <div class="panel-heading">
 
-                <h3>
+              <h3>
                   Tree trunks: <b>{{trunk_list.count}}</b>
                 </h3>
-              </div>
-              <div class="panel-body">
-                {% if  form.instance.pk  %}
-                      <table class="table table-striped">
+            </div>
+            <div class="panel-body">
+              {% if form.instance.pk %}
+              <table class="table table-striped">
 
-                              {% for trunk in trunk_list %}
+                {% for trunk in trunk_list %}
 
-                                  <tr>
-                                    <td class="fieldWrapper">
-                                      {{trunk.trunk_cm}}
-                                      </td>
-                                       <td class="fieldWrapper">
-                                        {{trunk.meas_height_cm}}
-                                      </td>
+                <tr>
+                  <td class="fieldWrapper">
+                    {{trunk.trunk_cm}}
+                  </td>
+                  <td class="fieldWrapper">
+                    {{trunk.meas_height_cm}}
+                  </td>
 
-                                       <td class="fieldWrapper">
-                                         <form action="/inventory/{{id}}/tree/{{id_t}}/trunk/{{trunk.id}}/delete/" method="post">
-                                             {% csrf_token %}
-                                             <button name="delete" class="btn btn-danger btn-sm" role="button">Delete</button>
-                                         </form>
-                                       </td>
-                                    </tr>
-                              {% endfor %}
-                          </tbody>
-                      </table>
-                {% else %}
-                <p id="info_blocked" style="display:block" class="alert alert-danger">
-                  Save the tree first!
-                </p>
-                {% endif %}
-
-              </div>
-
-              <div class="panel-footer">
-                {% if form.instance.pk  %}
-                <form method="post" action="/inventory/{{id}}/tree/{{id_t}}/" class="form-inline">
-
-                    {% csrf_token %}
-                    <div><span class="label label-danger">{{ trunk_form.trunk_cm.errors.as_text }}</span></div>
-                    <div><span class="label label-danger">{{ trunk_form.meas_height_cm.errors.as_text }}</span></div>
-                    <label class="sr-only" for="id_trunk_cm">Trunk cm:</label>
-                    <input value="{{trunk_form.trunk_cm.value}}" type="number" name="trunk_cm" placeholder="Trunk CM" required id="id_trunk_cm" class="form-control mb-2 mr-sm-2 mb-sm-0"/>
-                    <label  class="sr-only" for="id_meas_height_cm">at</label>
-                    <div class="input-group mb-2 mr-sm-2 mb-sm-0">
-                      <div class="input-group-addon">@</div>
-                      <input value={{trunk_form.meas_height_cm.value}} type="number" name="meas_height_cm" required  id="id_meas_height_cm"  value="130" class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                      <input type="submit" name="add_trunk" value="New Trunk" class="btn btn-block btn-success " role="button"/>
-                    </div>
-                </form>
-                {% endif %}
-              </div>
+                  <td class="fieldWrapper">
+                    <form action="/inventory/{{id}}/tree/{{id_t}}/trunk/{{trunk.id}}/delete/" method="post">
+                      {% csrf_token %}
+                      <button name="delete" class="btn btn-danger btn-sm" role="button">Delete</button>
+                    </form>
+                  </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+              {% else %}
+              <p id="info_blocked" style="display:block" class="alert alert-danger">
+                Save the tree first!
+              </p>
+              {% endif %}
 
             </div>
+
+            <div class="panel-footer">
+              {% if form.instance.pk %}
+              <form method="post" action="/inventory/{{id}}/tree/{{id_t}}/" class="form-inline">
+                {% csrf_token %}
+                <div><span class="label label-danger">{{ trunk_form.trunk_cm.errors.as_text }}</span></div>
+                <div><span class="label label-danger">{{ trunk_form.meas_height_cm.errors.as_text }}</span></div>
+                <label class="sr-only" for="id_trunk_cm">Trunk cm:</label>
+                <input value="{{trunk_form.trunk_cm.value}}" type="number" name="trunk_cm" placeholder="Trunk CM" required id="id_trunk_cm" class="form-control mb-2 mr-sm-2 mb-sm-0" />
+                <label class="sr-only" for="id_meas_height_cm">at</label>
+                <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                  <div class="input-group-addon">@</div>
+                  <input value={{trunk_form.meas_height_cm.value}} type="number" name="meas_height_cm" required id="id_meas_height_cm" value="130" class="form-control">
+                </div>
+
+                <div class="form-group">
+                  <input type="submit" name="add_trunk" value="New Trunk" class="btn btn-block btn-success " role="button" />
+                </div>
+              </form>
+              {% endif %}
+            </div>
+
           </div>
+        </div>
       </div>
       <div class="row">
-        {% if form.instance.pk  %}
-          <div class="col-sm-12">
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <div class="row">
-                  <div class="col-sm-6 ">
-                    <h3>
+        {% if form.instance.pk %}
+        <div class="col-sm-12">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <div class="row">
+                <div class="col-sm-6 ">
+                  <h3>
                        Number of images: <b>{{image_list.count}}</b>
                     </h3>
+                </div>
+                <div class="col-sm-6">
+                  <form action="/inventory/{{id}}/tree/{{id_t}}/snap/" method="get">
+                    {% csrf_token %}
+                    <button class="btn btn-block btn-success btn-lg" role="button">Snap a new PHOTO</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div class="panel-body">
+              {% if form.instance.pk %}
+              {% for image in image_list %}
+              <div class="col-sm-4">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h4 class="panel-title text-center">
+                        Image {{image.id}} </br><small> taken {{image.created_date}} </small>
+                    </h4>
                   </div>
-                  <div class="col-sm-6">
-                       <form action="/inventory/{{id}}/tree/{{id_t}}/snap/" method="get">
-                           {% csrf_token %}
-                             <button class="btn btn-block btn-success btn-lg" role="button">Snap a new PHOTO</button>
-                       </form>
+                  <div class="panel-body">
+                    <div class="fieldWrapper">
+                      <a class="thumbnail" href="{{ image.picture.url }}">
+                          <img class="img-responsive" src="{{ image.picture.url }}"  alt="">
+                      </a>
                     </div>
+                  </div>
+                  <div class="panel-footer">
+                    <td class="fieldWrapper">
+                      <form class="text-center" action="/inventory/{{id}}/tree/{{id_t}}/image/{{image.id}}/delete/" method="post">
+                        {% csrf_token %}
+                        <button name="delete" class="btn btn-danger btn-sm" role="button">Delete</button>
+                      </form>
+                    </td>
+
+                  </div>
                 </div>
               </div>
-              <div class="panel-body">
-                {% if form.instance.pk  %}
-
-                              {% for image in image_list %}
-                                  <div class="col-sm-4">
-                                      <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                      <h4 class="panel-title text-center">
-                                        Image {{image.id}} </br><small> taken {{image.created_date}} </small>
-                                      </h4>
-                                    </div>
-                                    <div class="panel-body">
-                                      <div class="fieldWrapper">
-                                        <a class="thumbnail" href="{{ image.picture.url }}">
-                                            <img class="img-responsive" src="{{ image.picture.url }}"  alt="">
-                                        </a>
-
-                                      </div>
-                                    </div>
-                                      <div class="panel-footer">
-                                        <td class="fieldWrapper">
-                                          <form class="text-center" action="/inventory/{{id}}/tree/{{id_t}}/image/{{image.id}}/delete/" method="post">
-                                              {% csrf_token %}
-                                              <button name="delete" class="btn btn-danger btn-sm" role="button">Delete</button>
-                                          </form>
-                                        </td>
-
-                                    </div>
-                                  </div>
-                                  </div>
-                              {% endfor %}
-                          </tbody>
-                        </div>
-
-
-                {% else %}
-                  <p>No images to show</p>
-                {% endif %}
-                </div>
-              </div>
+              {% endfor %}
+              </tbody>
+            </div>
+            {% else %}
+            <p>No images to show</p>
+            {% endif %}
           </div>
-
-        {% endif %}
+        </div>
       </div>
+
+      {% endif %}
     </div>
   </div>
+</div>
 
 </div>
 
@@ -292,5 +281,4 @@
 <script src="{% static 'js/jquery.cookie.js' %}"></script>
 <script src="{% static 'js/record_note.js' %}"></script>
 <link href="{% static 'css/record_note.css' %}" rel="stylesheet">
-
 {% endblock content %}

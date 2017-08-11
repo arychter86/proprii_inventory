@@ -1,6 +1,6 @@
-<!doctype html>
-{% load staticfiles%}
+<!doctype html> {% load staticfiles%}
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
 
@@ -10,12 +10,12 @@
 
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-   <link rel="stylesheet" href="{% static 'css/proprii.css' %}">
-   <!-- jQuery library -->
-   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="{% static 'css/proprii.css' %}">
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
-   <!-- Latest compiled JavaScript -->
-   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <!-- Latest compiled JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <!--[if lt IE 9]>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
   <![endif]-->
@@ -33,24 +33,25 @@
     </div>
 
     <div class="row">
-      <div class="col-sm-12" id ="button_home">
+      <div class="col-sm-12" id="button_home">
         <h1 id="snap_txt"> Tap the video to make a photo</h1>
       </div>
     </div>
 
-  <div class="row">
-    <div class="col-sm-12" id ="vid_container">
+    <div class="row">
+      <div class="col-sm-12" id="vid_container">
+      </div>
     </div>
-  </div>
 
 
   </div>
 
   <script type="text/javascript">
-     var id = "{{id}}";
-     var id_t = "{{id_t}}";
+    var id = "{{id}}";
+    var id_t = "{{id_t}}";
   </script>
   <script src="{% static 'js/jquery.cookie.js' %}"></script>
   <script src="{% static 'js/snapshot.js' %}"></script>
 </body>
+
 </html>

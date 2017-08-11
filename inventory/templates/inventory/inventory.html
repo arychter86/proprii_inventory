@@ -1,5 +1,4 @@
-{% extends 'inventory/base.html' %}
-{% block content %}
+{% extends 'inventory/base.html' %} {% block content %}
 
 
 <div class="container">
@@ -104,36 +103,34 @@
         </div>
         <div class="panel-body">
 
-                  {% for tree in trees %}
-                      <div class="row">
-                          <div class="col-xs-1 td_div"><b>{{tree.tree_number}}</b></div>
-                          <div class="col-xs-4 td_div">{{tree.name}}</div>
-                          <div class=" col-xs-2 td_div">{{tree.latin_name}}</div>
-                          <div class="col-xs-5 td_div">
-                            <div class="row" role="group" aria-label="...">
-                              <div class="col-xs-8">
-                                <form action="/inventory/{{id}}/tree/{{tree.id}}/" method="get">
-                                  {% csrf_token %}
-                                <button  class="btn btn-success btn-sm btn-block" role="button"> Edit </button>
-                                </form>
-                              </div>
-                              <div class="col-xs-4">
-                                <form action="/inventory/{{id}}/tree/{{tree.id}}/delete/" method="post">
-                                    {% csrf_token %}
-                                    <button name="delete" class="btn btn-danger btn-sm  btn-block" role="button">
+          {% for tree in trees %}
+          <div class="row">
+            <div class="col-xs-1 td_div"><b>{{tree.tree_number}}</b></div>
+            <div class="col-xs-4 td_div">{{tree.name}}</div>
+            <div class=" col-xs-2 td_div">{{tree.latin_name}}</div>
+            <div class="col-xs-5 td_div">
+              <div class="row" role="group" aria-label="...">
+                <div class="col-xs-8">
+                  <form action="/inventory/{{id}}/tree/{{tree.id}}/" method="get">
+                    {% csrf_token %}
+                    <button class="btn btn-success btn-sm btn-block" role="button"> Edit </button>
+                  </form>
+                </div>
+                <div class="col-xs-4">
+                  <form action="/inventory/{{id}}/tree/{{tree.id}}/delete/" method="post">
+                    {% csrf_token %}
+                    <button name="delete" class="btn btn-danger btn-sm  btn-block" role="button">
                                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                                     </button>
-                                </form>
-                              </div>
-                            </div>
-                          </div>
-                      </div>
-                      <hr />
-                  {% endfor %}
-
-
-          {% if id  %}
-              <a href="/inventory/{{id}}/tree/0/" class="btn btn-success btn-lg" role="button">Add Tree</a>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr />
+          {% endfor %}
+          {% if id %}
+          <a href="/inventory/{{id}}/tree/0/" class="btn btn-success btn-lg" role="button">Add Tree</a>
           {% endif %}
 
 

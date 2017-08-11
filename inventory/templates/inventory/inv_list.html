@@ -1,5 +1,4 @@
-{% extends 'inventory/base.html' %}
-{% block content %}
+{% extends 'inventory/base.html' %} {% block content %}
 
 <div class="container">
   <ol class="breadcrumb">
@@ -8,22 +7,22 @@
   </ol>
 </div>
 <div class="container">
-    <table class="table table-striped">
-      <thead>
-       <tr>
-         <th class="col-sm-1">id</th>
-         <th class="col-sm-3">Name</th>
-         <th class="col-sm-2">City</th>
-         <th class="col-sm-2">Street</th>
-         <th class="col-sm-2">Date</th>
-         <th class="col-sm-1" >Trees No.</th>
-         <th class="col-sm-1">Edit</th>
-       </tr>
-      </thead>
-      <tbody>
-        {% for inventory in inventorys %}
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th class="col-sm-1">id</th>
+        <th class="col-sm-3">Name</th>
+        <th class="col-sm-2">City</th>
+        <th class="col-sm-2">Street</th>
+        <th class="col-sm-2">Date</th>
+        <th class="col-sm-1">Trees No.</th>
+        <th class="col-sm-1">Edit</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for inventory in inventorys %}
 
-          <span>
+      <span>
             <tr>
               <td>{{inventory.id}}</td>
               <td>{{inventory.name}}</td>
@@ -33,12 +32,10 @@
               <td>{{inventory.treenum}}</td>
               <td>  <a href="/inventory/{{inventory.id}}/" class="btn btn-success btn-sm" role="button"> Click </a></td>
             </tr>
-          </span>
+          </span> {% endfor %}
 
-       {% endfor %}
-
-      </tbody>
-    </table>
+    </tbody>
+  </table>
 </div>
 
 {% endblock content %}
