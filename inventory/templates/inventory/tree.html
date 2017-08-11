@@ -159,17 +159,16 @@
               {% if form.instance.pk %}
 
                 {% for trunk in trunk_list %}
-                <div class="col-sm-3 col-xs-4 padding-5 text-center ">
-                  <div class="alert alert-warning">
-                    <div class="lead nomargin no-overflow"><b>{{trunk.trunk_cm}}</b></div>
-                    <div class="nomargin no-overflow"><small>@{{trunk.meas_height_cm}}cm</small></div>
-
-                    <form action="/inventory/{{id}}/tree/{{id_t}}/trunk/{{trunk.id}}/delete/" method="post">
+                <div class="col-sm-2 col-xs-4 padding-5">
+                  <div class="alert  alert-success text-center">
+                    <form class=" text-right" action="/inventory/{{id}}/tree/{{id_t}}/trunk/{{trunk.id}}/delete/" method="post">
                       {% csrf_token %}
-                      <button name="delete" class="btn btn-danger btn-sm " role="button">
+                      <button name="delete" class="btn btn-danger btn-xs " role="button">
                          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                       </button>
                     </form>
+                    <div class="lead nomargin no-overflow"><b>{{trunk.trunk_cm}}</b></div>
+                    <div class="nomargin no-overflow"><small>@{{trunk.meas_height_cm}}cm</small></div>
                   </div>
 
 
@@ -199,6 +198,7 @@
 
                 <div class="col-xs-4">
                   <div><span class="label label-danger">{{ trunk_form.meas_height_cm.errors.as_text }}</span></div>
+
                   <label hidden class="sr-only" for="id_meas_height_cm">at</label>
                   <div class="input-group mb-2 mr-sm-2 mb-sm-0">
                     <div class="input-group-addon">@</div>
