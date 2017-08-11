@@ -16,6 +16,7 @@
         <div class="panel-heading">
           <h3>
             Inventory {{id}} </br><small>({{form.instance.created_date|date:"D, d-m-Y"}})</small>
+
           </h4>
         </div>
         <div class="panel-body">
@@ -24,8 +25,7 @@
               {% csrf_token %}
               <div class="fieldWrapper">
                   <div class="row  form-group">
-
-                      <label class="col-xs-3" for="id_name">Name:</label>
+                      <label class="control-label  col-xs-3" for="id_name">Name:</label>
                       <div class="col-xs-9">
                         <div><span class="label label-danger">{{ form.name.errors.as_text }}</span></div>
                         <input class="form-control" type="text" name="name" value="{{form.name.value}}" maxlength="200" required id="id_name" />
@@ -81,12 +81,15 @@
                           <div class="btn-group" role="group">
                             <input type="submit" name="delete" value="Delete" class="btn btn-danger btn-lg" role="button"/>
                           </div>
+
                         {% endif %}
                         </div>
 
                     </div>
               </div>
           </form>
+          <button  onClick=window.open("/inventory/{{id}}/table","Ratting","width=550,height=170,left=150,top=200,toolbar=0,status=0,") class="btn btn-info btn-sm btn-block" role="button"> Generate Table </button>
+
         </div>
       </div>
     </div>
@@ -94,9 +97,10 @@
 
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h4 class="panel-title">
-            Number of trees {{trees.count }}
-          </h4>
+
+          <h3>
+            Number of trees: <b>{{trees.count }}</b>
+          </h3>
         </div>
         <div class="panel-body">
 

@@ -10,6 +10,8 @@ import json
 import base64
 from django.conf import settings
 import os.path
+import csv
+from io import StringIO
 # Create your views here.
 
 class InventoryList(View):
@@ -34,7 +36,6 @@ class InventoryView(View):
         if 'id' in kwargs:
             id = kwargs.get('id')
             if id != '0':
-                id = kwargs.get('id')
                 queryset = Inventory.objects.filter(author=user)
                 inv_obj = get_object_or_404(queryset, pk=id)
             else:
@@ -87,6 +88,52 @@ class InventoryView(View):
         else:
             raise Http404("Missing inventory id.")
 
+class InventoryCsvView(View):
+    template_name = 'inventory/inventory_table.html'
+    username = None
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            user = request.user
+
+        if 'id' in kwargs:
+            id = kwargs.get('id')
+            queryset = Inventory.objects.filter(author=user)
+            inventory = get_object_or_404(queryset, pk=id)
+            trees = Tree.objects.filter(inventory = inventory )
+             # Create the HttpResponse object with the appropriate CSV header.
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
+            writer = csv.writer(response)
+
+            for tree in trees:
+                writer.writerow([tree.tree_number, tree.name, tree.latin_name, tree.height_m, tree.crown_m, tree.notes])
+
+            return response
+        else:
+            raise Http404("Missing inventory id.")
+
+
+class InventoryTableView(View):
+    template_name = 'inventory/inventory_table.html'
+    username = None
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            user = request.user
+
+        if 'id' in kwargs:
+            id = kwargs.get('id')
+            queryset = Inventory.objects.filter(author=user)
+            inventory = get_object_or_404(queryset, pk=id)
+            trees = Tree.objects.filter(inventory = inventory )
+
+            TreeFormSet = modelformset_factory(Tree,form=TreeForm, extra=0)
+            formset = TreeFormSet(queryset=Tree.objects.filter(inventory = inventory ))
+
+            return render(request, self.template_name, {'formset':formset,'inventory': inventory})
+        else:
+            raise Http404("Missing inventory id.")
 
 class TreeTrunkDeleteView(View):
     username = None
@@ -219,7 +266,7 @@ class TreeView(View):
                     if 'save_and_exit' in request.POST :
                         return HttpResponseRedirect('/inventory/'+id+'/')
                     elif 'save_and_new' in request.POST :
-                        return HttpResponseRedirect('/inventory/'+id+'/tree/0/')  
+                        return HttpResponseRedirect('/inventory/'+id+'/tree/0/')
                     else:
                         return HttpResponseRedirect('/inventory/'+id+'/tree/'+id_t+'/')
 

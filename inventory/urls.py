@@ -27,6 +27,8 @@ from django.conf.urls.static import static
 urlpatterns = [
      url(r'^$', login_required(InventoryList.as_view())),
      url(r'^inventory/(?P<id>[0-9]+)/$', login_required(InventoryView.as_view())),
+     url(r'^inventory/(?P<id>[0-9]+)/table/$', login_required(InventoryTableView.as_view())),
+     url(r'^inventory/(?P<id>[0-9]+)/csv/$', login_required(InventoryCsvView.as_view())),
      url(r'^inventory/add/$', login_required(InventoryView.as_view())),
      url(r'^logout/$', auth_views.logout, {'next_page': '/'}, name='auth_logout'),
      url(r'^login/$', auth_views.login, name='login'),

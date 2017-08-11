@@ -6,6 +6,8 @@ from django.contrib.auth.models import User
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 from inventory.validators import *
+
+
 class Inventory(models.Model):
     author = models.ForeignKey('auth.User',null=True)
     name = models.CharField(max_length=200)
