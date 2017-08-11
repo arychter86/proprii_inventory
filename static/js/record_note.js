@@ -59,7 +59,7 @@ if (!('webkitSpeechRecognition' in window)) {
       showInfo('info_start');
       return;
     }
-    showInfo('');
+    showInfo('info_start');
     if (window.getSelection) {
       window.getSelection().removeAllRanges();
       var range = document.createRange();

@@ -10,12 +10,12 @@
 
     }
     #results {
-    padding:0;
+    padding:10px;
     margin:0;
     font-weight: bold;
     border: 1px solid #ddd;
     text-align: left;
-    min-height: 150px;
+    min-height: 60px;
     }
 
     .interim {

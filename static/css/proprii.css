@@ -13,6 +13,15 @@
    padding: 0 !important;
    margin: 0 !important;
 }
+.nomargin {
+   margin: 0 !important;
+}
+.padding-5 {
+   padding: 5px !important;
+}
+.margin-5 {
+   margin: 5px !important;
+}
 .container {
     padding-right: 2px;
     padding-left: 2px;
@@ -24,13 +33,7 @@
 	table-layout:fixed;
 }
 
-.table td {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.td_div {
+.table td, .td_div, .no-overflow {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
