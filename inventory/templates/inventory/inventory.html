@@ -68,7 +68,12 @@
                       </div>
                   </div>
               </div>
-
+              <div class="row form-group">
+                <label class="control-label col-sm-3" for="id_notes">Notes:</label>
+                <div class="col-sm-9">
+                  <textarea class="form-control" name="notes" cols="10" rows="3" width="100%" id="id_notes">{{form.notes.value}}</textarea>
+                </div>
+              </div>
               {{ form.created_date.as_hidden  }}
               <div class="form-group row">
                     <div class="offset-sm-6 col-sm-12">
@@ -87,56 +92,135 @@
                     </div>
               </div>
           </form>
-          <button  onClick=window.open("/inventory/{{id}}/table","Ratting","width=550,height=170,left=150,top=200,toolbar=0,status=0,") class="btn btn-info btn-sm btn-block" role="button"> Generate Table </button>
-
+          <button  onClick=window.open("/inventory/{{id}}/table","Ratting","width=550,height=170,left=150,top=200,toolbar=0,status=0,") class="btn btn-default btn-sm btn-block" role="button"> Generate Table </button>
         </div>
       </div>
     </div>
     <div class="col-sm-7">
-
+      <div class="row">
+        <div class="col-xs-12">
+      {% if form.instance.pk %}
       <div class="panel panel-default">
         <div class="panel-heading">
-
           <h3>
-            Number of trees: <b>{{trees.count }}</b>
+            Number of trees: <b>{{form.instance.trees.all.count }}</b>
           </h3>
+          <a href="/inventory/{{id}}/tree/0/" class="btn btn-success" role="button">Add Tree</a>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            {% for tree in form.instance.trees.all %}
+            <div class="col-xs-12">
+              <a href="/inventory/{{id}}/tree/{{tree.id}}/">
+                <div class="alert alert-success">
+                  <div class="row">
+                    <div class="col-xs-10">
+                      <div class="row">
+                        <div class="col-xs-1"><b>{{tree.tree_number}}</b></div>
+                        <div class="col-xs-4 no-overflow"><b>{{tree.name}}</b></div>
+                        <div class="col-xs-2 no-overflow">{{tree.latin_name}}</div>
+                        <div class="col-xs-2 no-overflow">{{tree.height_m}} m</div>
+                      </div>
+                    </div>
+                    <div class="col-xs-2">
+                      <form action="/inventory/{{id}}/tree/{{tree.id}}/delete/" method="post">
+                        {% csrf_token %}
+                        <button name="delete" class="btn btn-danger btn-sm " role="button">
+                       <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </button>
+                      </form>
+                    </div>
+                  </div>
+
+
+
+                </div>
+              </a>
+            </div>
+            {% endfor %}
+          </div>
+
+        </div>
+
+      </div>
+      {% else %}
+      <div class="alert  alert-warning text-center">
+        <p>No trees to show</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  <div class="row">
+
+    <div class="col-sm-12">
+      {% if form.instance.pk %}
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <div class="row">
+            <div class="col-sm-6 ">
+              <h3>
+                       Number of maps: <b>{{form.instance.maps.all.count}}</b>
+                    </h3>
+            </div>
+
+          </div>
+        </div>
+        <div class="panel-footer ">
+          <form class="" enctype="multipart/form-data" action="/inventory/{{id}}/map/" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="id_picture"></label><input type="file" name="picture" id="id_picture" accept="image/*" />
+            </div>
+            <input type="submit" name="new_map" value="Upload" class="btn btn-success btn-sm" role="button" />
+          </form>
         </div>
         <div class="panel-body">
 
-          {% for tree in trees %}
-          <div class="row">
-            <div class="col-xs-1 td_div"><b>{{tree.tree_number}}</b></div>
-            <div class="col-xs-4 td_div">{{tree.name}}</div>
-            <div class=" col-xs-2 td_div">{{tree.latin_name}}</div>
-            <div class="col-xs-5 td_div">
-              <div class="row" role="group" aria-label="...">
-                <div class="col-xs-8">
-                  <form action="/inventory/{{id}}/tree/{{tree.id}}/" method="get">
-                    <button class="btn btn-success btn-sm btn-block" role="button"> Edit </button>
-                  </form>
+          {% for map in form.instance.maps.all %}
+          <div class="col-sm-4">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4 class="panel-title text-center">
+                        Map {{map.id}} </br><small> loaded {{map.created_date}} </small>
+                    </h4>
+              </div>
+              <div class="panel-body">
+                <div class="fieldWrapper">
+                  <a class="thumbnail" href="{{ map.picture.url }}">
+                          <img class="img-responsive" src="{{ map.picture.url }}"  alt="">
+                      </a>
                 </div>
-                <div class="col-xs-4">
-                  <form action="/inventory/{{id}}/tree/{{tree.id}}/delete/" method="post">
+              </div>
+              <div class="panel-footer">
+                <td class="fieldWrapper">
+                  <form class="text-center" action="/inventory/{{id}}/map/{{map.id}}/delete/" method="post">
                     {% csrf_token %}
-                    <button name="delete" class="btn btn-danger btn-sm " role="button">
-                       <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                    </button>
+                    <button name="delete_map" class="btn btn-danger btn-sm" role="button">Delete</button>
                   </form>
-                </div>
+                </td>
+
               </div>
             </div>
           </div>
-          <hr />
           {% endfor %}
-          {% if id %}
-          <a href="/inventory/{{id}}/tree/0/" class="btn btn-success btn-lg" role="button">Add Tree</a>
-          {% endif %}
-
 
         </div>
+
+
       </div>
+      {% else %}
+      <div class="alert  alert-warning text-center">
+        <p>No images to show</p>
+      </div>
+      {% endif %}
     </div>
+
   </div>
+
+
+</div>
+</div>
+</div>
 </div>
 
 

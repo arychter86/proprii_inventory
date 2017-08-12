@@ -36,7 +36,7 @@
           {# Include the hidden fields in the form #}
           {% if forloop.first %}
             {% for hidden in form.hidden_fields %}
-              {{ hidden }} 
+              {{ hidden }}
             {% endfor %}
           {% endif %}
           {{ field.errors.as_ul }}

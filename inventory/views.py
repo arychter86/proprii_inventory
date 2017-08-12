@@ -37,18 +37,19 @@ class InventoryView(View):
             id = kwargs.get('id')
             if id != '0':
                 queryset = Inventory.objects.filter(author=user)
-                inv_obj = get_object_or_404(queryset, pk=id)
+                inventory = get_object_or_404(queryset, pk=id)
             else:
-                inv_obj = Inventory()
-                setattr(inv_obj, 'author', user)
+                inventory = Inventory()
+                setattr(inventory, 'author', user)
 
-            trees = Tree.objects.filter(inventory = inv_obj )
+            trees = inventory.trees.all()
             try:
-                form = InventoryForm(instance=inv_obj)
+                form = InventoryForm(instance=inventory)
             except Inventory.DoesNotExist:
                 form =  InventoryForm()
-
-            return render(request, 'inventory/inventory.html', {'id':id,'form': form,'trees':trees})
+            # form for loading new map
+            map_form = InventoryMapForm()
+            return render(request, 'inventory/inventory.html', {'id':id,'form': form,'map_form':map_form})
         else:
             raise Http404("Missing inventory id.")
 
@@ -62,29 +63,27 @@ class InventoryView(View):
 
             if id != '0':
                 queryset = Inventory.objects.filter(author=user)
-                inv_obj = get_object_or_404(queryset, pk=id)
-                form = InventoryForm(request.POST, request.FILES, instance=inv_obj)
+                inventory = get_object_or_404(queryset, pk=id)
+                form = InventoryForm(request.POST, request.FILES, instance=inventory)
             else:
                 form = InventoryForm(request.POST, request.FILES)
 
             if 'inventory' in request.POST:
                 if form.is_valid():
-                    inv_obj = form.save(commit=False)
+                    inventory = form.save(commit=False)
                     # set the author
-                    inv_obj.author = request.user
-                    inv_obj.save()
-                    new_id = inv_obj.id
+                    inventory.author = request.user
+                    inventory.save()
+                    new_id = inventory.id
                     print('Inventory Data Saved',form.instance)
                     return HttpResponseRedirect('/inventory/'+str(new_id)+'/')
                 else:
                     print('Problem with saving', form.errors)
             elif 'delete' in request.POST:
-                inv_obj.delete()
+                inventory.delete()
                 return HttpResponseRedirect('/')
 
-            inv_obj = Inventory.objects.filter(id = id )
-            trees = Tree.objects.filter(inventory = inv_obj )
-            return render(request, 'inventory/inventory.html', {'id':id,'form': form,'trees':trees})
+            return render(request, 'inventory/inventory.html', {'id':id,'form': form})
         else:
             raise Http404("Missing inventory id.")
 
@@ -126,7 +125,7 @@ class InventoryTableView(View):
             id = kwargs.get('id')
             queryset = Inventory.objects.filter(author=user)
             inventory = get_object_or_404(queryset, pk=id)
-            trees = Tree.objects.filter(inventory = inventory )
+            trees = inventory.trees.all()
 
             TreeFormSet = modelformset_factory(Tree,form=TreeForm, extra=0)
             formset = TreeFormSet(queryset=Tree.objects.filter(inventory = inventory ))
@@ -135,6 +134,39 @@ class InventoryTableView(View):
         else:
             raise Http404("Missing inventory id.")
 
+class InventoryMapView(View):
+
+    def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            user = request.user
+
+        if 'id_map' in kwargs and 'id' in kwargs and "delete_map" in request.POST:
+            id_map = kwargs.get('id_map')
+            id = kwargs.get('id')
+            queryset = InventoryMap.objects.filter(id=id_map)
+            map = get_object_or_404(queryset)
+            map.delete()
+            print('Map', id_map,'in inventory',id,' deleted')
+            return HttpResponseRedirect('/inventory/'+str(id)+'/')
+        elif 'id' in kwargs and "new_map" in request.POST:
+            id = kwargs.get('id')
+            if len(request.FILES) != 0:
+                queryset = Inventory.objects.filter(author=user)
+                inventory = get_object_or_404(queryset, pk=id)
+                map_form = InventoryMapForm(request.POST, request.FILES)
+
+                if map_form.is_valid():
+                    inventory_map = map_form.save(commit=False)
+                    inventory_map.inventory = inventory
+                    inventory_map.save()
+                    print('Saving a new map', inventory_map.picture.name,' for Inventory',inventory.id)
+                    return HttpResponseRedirect('/inventory/'+str(id)+'/')
+                else:
+                    raise Http404("Map form is not valid.")
+            else:
+                return HttpResponseRedirect('/inventory/'+str(id)+'/')
+        else:
+            raise Http404("Missing inventory id.")
 class TreeTrunkDeleteView(View):
     username = None
     def post(self, request, *args, **kwargs):
@@ -145,8 +177,8 @@ class TreeTrunkDeleteView(View):
             id = kwargs.get('id')
             id_t = kwargs.get('id_t')
             id_tt = kwargs.get('id_tt')
-            inv_obj = get_object_or_404(Inventory, pk=id)
-            queryset = Tree.objects.filter(inventory=inv_obj)
+            inventory = get_object_or_404(Inventory, pk=id)
+            queryset = Tree.objects.filter(inventory=inventory)
             tree_obj = get_object_or_404(queryset, pk=id_t)
             queryset = TreeTrunk.objects.filter(tree=tree_obj)
             trunk = get_object_or_404(queryset, pk=id_tt)
@@ -166,8 +198,8 @@ class TreeDeleteView(View):
         if 'id_t' in kwargs and 'id' in kwargs:
             id = kwargs.get('id')
             id_t = kwargs.get('id_t')
-            inv_obj = get_object_or_404(Inventory, pk=id)
-            queryset = Tree.objects.filter(inventory=inv_obj)
+            inventory = get_object_or_404(Inventory, pk=id)
+            queryset = Tree.objects.filter(inventory=inventory)
             tree_obj = get_object_or_404(queryset, pk=id_t)
             tree_obj.delete()
             print('Tree deleted')
@@ -185,8 +217,8 @@ class TreeImageDeleteView(View):
             id = kwargs.get('id')
             id_t = kwargs.get('id_t')
             id_image = kwargs.get('id_image')
-            inv_obj = get_object_or_404(Inventory, pk=id)
-            queryset = Tree.objects.filter(inventory=inv_obj)
+            inventory = get_object_or_404(Inventory, pk=id)
+            queryset = Tree.objects.filter(inventory=inventory)
             tree_obj = get_object_or_404(queryset, pk=id_t)
             queryset = TreeImage.objects.filter(tree=tree_obj)
             image = get_object_or_404(queryset, pk=id_image)
@@ -205,16 +237,16 @@ class TreeView(View):
             id = kwargs.get('id')
             id_t = kwargs.get('id_t')
 
-            inv_obj = get_object_or_404(Inventory, pk=id)
+            inventory = get_object_or_404(Inventory, pk=id)
 
             if id_t != '0':
-                queryset = Tree.objects.filter(inventory=inv_obj)
+                queryset = Tree.objects.filter(inventory=inventory)
                 tree_obj = get_object_or_404(queryset, pk=id_t)
             else:
                 tree_obj = Tree()
                 # set the initial tree id/ should be done in Tree model?
-                if Tree.objects.all().filter(inventory=inv_obj).order_by('-tree_number'):
-                    top = Tree.objects.all().filter(inventory=inv_obj).order_by('-tree_number')[0]
+                if Tree.objects.all().filter(inventory=inventory).order_by('-tree_number'):
+                    top = Tree.objects.all().filter(inventory=inventory).order_by('-tree_number')[0]
                     tree_obj.tree_number = top.tree_number + 1
                 else:
                     tree_obj.tree_number = 1
@@ -224,13 +256,9 @@ class TreeView(View):
             raise Http404("Missing inventory or tree id.")
         # tree form
         form = TreeForm(instance=tree_obj)
-        #List of images
-        image_list = TreeImage.objects.filter(tree = tree_obj)
-        #List of trunks
-        trunk_list = TreeTrunk.objects.filter(tree = tree_obj)
         # new trunk form
         trunk_form = TreeTrunkForm()
-        return render(request, self.template_name, {'trunk_form':trunk_form,'trunk_list':trunk_list,'form': form,'image_list':image_list,'inventory':inv_obj,'id':id,'id_t':id_t})
+        return render(request, self.template_name, {'trunk_form':trunk_form,'form': form,'id':id,'id_t':id_t})
 
     def post(self, request, *args, **kwargs):
 
@@ -239,21 +267,22 @@ class TreeView(View):
             id_t = kwargs.get('id_t')
 
             # There must be the Iventory!
-            inv_obj = get_object_or_404(Inventory, pk=id)
+            inventory = get_object_or_404(Inventory, pk=id)
             # create empty tree object
             tree_obj = Tree()
             # handle tree form
-            if 'save_tree' in request.POST or 'save_and_exit' in request.POST :
+            if 'save_tree' in request.POST :
                 # get the tree form
                 if Tree.objects.filter(pk=id_t).exists():
-                    queryset = Tree.objects.filter(inventory=inv_obj)
+                    queryset = Tree.objects.filter(inventory=inventory)
                     tree_obj = get_object_or_404(queryset, pk=id_t)
                     form = TreeForm(request.POST, request.FILES,instance=tree_obj)
                     tree_obj = form.instance
+                    print('Updating TREE for INVENTORY:',inventory)
                 else:   # this is a new Tree!
-                    print('Adding new TREE for INVENTORY:',inv_obj)
+                    print('Adding new TREE for INVENTORY:',inventory)
                     form = TreeForm(request.POST, request.FILES)
-                    setattr(form.instance, 'inventory', inv_obj)
+                    setattr(form.instance, 'inventory', inventory)
 
                 #validatin data form a form
                 if form.is_valid():
@@ -263,9 +292,9 @@ class TreeView(View):
                     tree_obj.save()
                     id_t = str(tree_obj.id)
                     print("TREE saved:",tree_obj)
-                    if 'save_and_exit' in request.POST :
+                    if request.POST.get("save_tree", "") == 'Exit':
                         return HttpResponseRedirect('/inventory/'+id+'/')
-                    elif 'save_and_new' in request.POST :
+                    elif request.POST.get("save_tree", "") == 'New':
                         return HttpResponseRedirect('/inventory/'+id+'/tree/0/')
                     else:
                         return HttpResponseRedirect('/inventory/'+id+'/tree/'+id_t+'/')
@@ -276,7 +305,7 @@ class TreeView(View):
 
             if 'add_trunk' in request.POST and id_t != '0':
                 trunk_form = TreeTrunkForm(request.POST, request.FILES)
-                queryset = Tree.objects.filter(inventory=inv_obj)
+                queryset = Tree.objects.filter(inventory=inventory)
                 tree_obj = get_object_or_404(queryset, pk=id_t)
                 # tree form
                 form = TreeForm(instance=tree_obj)
@@ -298,7 +327,7 @@ class TreeView(View):
         #List of trunks
         trunk_list = TreeTrunk.objects.filter(tree = tree_obj)
 
-        return render(request, self.template_name, {'trunk_form':trunk_form,'trunk_list':trunk_list,'form': form,'image_list':image_list,'inventory':inv_obj,'id':id,'id_t':id_t})
+        return render(request, self.template_name, {'trunk_form':trunk_form,'trunk_list':trunk_list,'form': form,'image_list':image_list,'inventory':inventory,'id':id,'id_t':id_t})
 
 
 class TreeImageView(View):
@@ -313,14 +342,14 @@ class TreeImageView(View):
             id = kwargs.get('id')
             id_t = kwargs.get('id_t')
             queryset = Inventory.objects.filter(author=user)
-            inv_obj = get_object_or_404(queryset, pk=id)
+            inventory = get_object_or_404(queryset, pk=id)
 
-            queryset = Tree.objects.filter(inventory=inv_obj)
+            queryset = Tree.objects.filter(inventory=inventory)
             tree_obj = get_object_or_404(queryset, pk=id_t)
         else:
             raise Http404("Missing inventory or tree id.")
 
-        return render(request, self.template_name, {'tree':tree_obj,'inventory':inv_obj,'id':id,'id_t':id_t})
+        return render(request, self.template_name, {'tree':tree_obj,'inventory':inventory,'id':id,'id_t':id_t})
 
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated():
@@ -330,16 +359,16 @@ class TreeImageView(View):
             id_t = kwargs.get('id_t')
 
             queryset = Inventory.objects.filter(author=user)
-            inv_obj = get_object_or_404(queryset, pk=id)
+            inventory = get_object_or_404(queryset, pk=id)
 
-            queryset = Tree.objects.filter(inventory=inv_obj)
+            queryset = Tree.objects.filter(inventory=inventory)
             tree_obj = get_object_or_404(queryset, pk=id_t)
 
         else:
             raise Http404("Missing inventory or tree id.")
 
         json_data = json.loads(request.body) # request.raw_post_data w/ Django < 1.4
-        if 'id' in json_data and 'id_t' in json_data and 'img_base64' in json_data:
+        if 'img_base64' in json_data:
 
             print('Image data for inv ', json_data['id'],' and tree ',json_data['id_t'])
             try:
@@ -358,12 +387,14 @@ class TreeImageView(View):
             t_img.description = 'img'
             t_img.save(force_insert=True)
             filename = 'tree_'+str(tree_obj.id)+'_image_'+str(t_img.id)+'.jpeg'
-            full_filename = os.path.join(settings.MEDIA_ROOT, "photos", filename)
+            full_filename = os.path.join(settings.MEDIA_ROOT, t_img.UPLOAD_TO, filename)
             print('Saving image to', full_filename)
             with open(full_filename,'wb') as f:
                 f.write(image_binary)
-            t_img.picture.name = "photos/"+filename
+            t_img.picture.name = t_img.UPLOAD_TO+filename
             t_img.save()
+        else:
+            raise Http404("Wrong data.")
         #return HttpResponseRedirect('/inventory/'+id+'/tree/'+str(tree_obj.id)+'/')
         redirect = '/inventory/'+id+'/tree/'+str(tree_obj.id)+'/';
         response_data = {}

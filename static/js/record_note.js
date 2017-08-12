@@ -50,7 +50,7 @@ if (!('webkitSpeechRecognition' in window)) {
   recognition.onend = function() {
     recognizing = false;
     if(final_transcript != "")
-      notes.val( notes.val() + final_transcript );
+      notes.val( notes.val() + final_transcript + ". " );
     if (ignore_onend) {
       return;
     }
