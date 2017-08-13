@@ -16,7 +16,7 @@ class Inventory(models.Model):
     code = models.CharField(max_length=10, blank=True, validators=[numeric])
     created_date = models.DateTimeField(default=timezone.now)
     client_name = models.CharField(max_length=200, blank=True)
-    notes = models.TextField(blank=True)
+    notes = models.TextField(max_length=1000,blank=True)
     def __str__(self):
         return str(self.id) + "_" +self.name + ", klient: " + self.client_name + ", data: " + str(self.created_date)
 
@@ -44,6 +44,8 @@ class InventoryMapForm(forms.ModelForm):
         model = InventoryMap
         fields = ['picture']
 
+
+
 class Tree(models.Model):
     inventory = models.ForeignKey('Inventory', related_name='trees')
     tree_number = models.IntegerField(default=0,validators=[validate_tree_number])
@@ -55,11 +57,11 @@ class Tree(models.Model):
 
     crown_area_unit = models.CharField(max_length=2, choices=M_CHOICES, default='1')
 
-    notes = models.TextField(blank=True)
+    notes = models.TextField(max_length=1000, blank=True)
     created_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return str(self.id) + "_" + self.name + "____" + str(self.created_date)
+        return str(self.id) + ": " + self.name
 
 
 
@@ -81,6 +83,18 @@ class TreeFormSmall(forms.ModelForm):
     class Meta:
         model = Tree
         fields = ['tree_number','name', 'latin_name']
+
+class TreeOnMap(models.Model):
+    inventorymap = models.ForeignKey('InventoryMap', related_name = 'treesonmap')
+    tree = models.ForeignKey('Tree')
+    x_pos = models.IntegerField(default=0, validators=[validate_postive_int])
+    y_pos = models.IntegerField(default=0, validators=[validate_postive_int])
+    radius = models.IntegerField(default=10, validators=[validate_postive_int])
+
+class TreeOnMapForm(forms.ModelForm):
+    class Meta:
+        model = TreeOnMap
+        fields = ['x_pos', 'y_pos', 'radius', 'tree']
 
 class TreeImage(models.Model):
     UPLOAD_TO = 'photos/trees/'

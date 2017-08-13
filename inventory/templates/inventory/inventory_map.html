@@ -1,0 +1,117 @@
+ {% extends 'inventory/base.html' %}
+
+ {% block content %}
+
+<div class="container ">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Inventory List</a></li>
+    <li class="breadcrumb-item"><a href="/inventory/{{id}}/">Inventory {{id}}</a></li>
+  </ol>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-9">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <div class="row">
+            <div class="col-xs-6">
+              <h3>
+                Inventory <b>{{inventory.id}}</b>
+              </br><small>date {{inventory.created_date|date:"d M Y"}} </small>
+              </h3>
+            </div>
+          </div>
+        </div>
+        <div class="panel-body" >
+
+          <div  class="row"  id="canvas_parent">
+
+            <canvas id="canvas_map">
+
+
+            </canvas>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+    <div class="col-sm-3">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+
+              <h3>
+                  Number of trees: <b>{{trees.count}}</b>
+                </h3>
+            </div>
+            <div class="panel-footer">
+
+              <form method="post" action="/inventory/{{id}}/map/{{id_map}}/" class="form-group row">
+                {% csrf_token %}
+                <table>
+                 {{form.as_table}}
+               </table>
+                <div class="col-xs-12">
+                  <div class="form-group">
+                    <input type="submit" name="newtreeonmap" value="New Trunk" class="btn btn-block btn-success " role="button" />
+                  </div>
+                </div>
+              </form>
+
+            </div>
+
+            <div class="panel-body row">
+
+              {% for tree in inventorymap.treesonmap.all %}
+              <div class="col-sm-12 col-xs-12 padding-5">
+                <div class="alert  alert-success text-center">
+                  <form class=" text-right" action="/inventory/{{id}}/map/{{id_map}}/treeonmap/{{tree.id}}/" method="post">
+                    {% csrf_token %}
+                    <button name="delete_tree" class="btn btn-danger btn-xs " role="button">
+                         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                      </button>
+                  </form>
+                  <div class="nomargin no-overflow"><b>{{tree.tree.name}}</b></div>
+                  <div class="nomargin no-overflow"><b>X:{{tree.x_pos}} Y:{{tree.y_pos}}</b></div>
+                  <div class="nomargin no-overflow"><b>{{tree.radius}}</b></div>
+                </div>
+
+
+              </div>
+                {% endfor %}
+
+
+            </div>
+
+
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  function showWarning() {
+    $("#unsaved-warning").show();
+  }
+</script>
+
+{% load staticfiles%}
+<script type="text/javascript">
+
+var trees = {{ trees|safe }};
+  var id = "{{id}}";
+  var id_t = "{{id_t}}";
+  var image_src = "{{inventorymap.picture.url}}";
+</script>
+
+<script src="{% static 'js/jquery.cookie.js' %}"></script>
+<script src="{% static 'js/map.js' %}"></script>
+{% endblock content %}

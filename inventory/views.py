@@ -6,6 +6,7 @@ from .models import *
 from django.forms import modelformset_factory
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.core.files import File
+from django.core import serializers
 import json
 import base64
 from django.conf import settings
@@ -97,9 +98,8 @@ class InventoryCsvView(View):
 
         if 'id' in kwargs:
             id = kwargs.get('id')
-            queryset = Inventory.objects.filter(author=user)
-            inventory = get_object_or_404(queryset, pk=id)
-            trees = Tree.objects.filter(inventory = inventory )
+
+            trees = get_object_or_404(Tree.objects.filter(inventory__id = id ))
              # Create the HttpResponse object with the appropriate CSV header.
             response = HttpResponse(content_type='text/csv')
             response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
@@ -135,10 +135,44 @@ class InventoryTableView(View):
             raise Http404("Missing inventory id.")
 
 class InventoryMapView(View):
+    template_name = 'inventory/inventory_map.html'
+
+    def get(self, request, *args, **kwargs):
+        if 'id_map' in kwargs and 'id' in kwargs:
+            id = kwargs.get('id')
+            id_map = kwargs.get('id_map')
+            treesonmap = TreeOnMap.objects.filter(inventorymap__inventory__id = id)
+            tree_form = TreeOnMapForm()
+            tree_form.fields["tree"].queryset = Tree.objects.filter(inventory__id=id)
+            inventorymap = InventoryMap.objects.filter(id = id_map,inventory__id = id).last()
+            trees = serializers.serialize('json',inventorymap.treesonmap.all())
+            return render(request, self.template_name, {'inventorymap':inventorymap,'form': tree_form,'id':id,'id_map':id_map,'trees':trees})
 
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated():
             user = request.user
+        # adding new treeonmap
+        if 'id_map' in kwargs and 'id' in kwargs and "newtreeonmap" in request.POST:
+            id = kwargs.get('id')
+            id_map = kwargs.get('id_map')
+            tree_form = TreeOnMapForm(request.POST, request.FILES)
+            inventorymap = InventoryMap.objects.filter(id = id_map,inventory__id = id).last()
+
+            if tree_form.is_valid():
+                print('Adding new tree on map')
+                treeonmap = tree_form.save(commit=False)
+
+                setattr(treeonmap, 'inventorymap', inventorymap)
+
+                treeonmap.save()
+                print('New tree on map saved!')
+            else:
+                print('Form not valid')
+
+            tree_form.fields["tree"].queryset = Tree.objects.filter(inventory__id=id)
+            trees = serializers.serialize('json',inventorymap.treesonmap.all())
+            return render(request, self.template_name, {'inventorymap':inventorymap,'form': tree_form,'id':id, 'id_map': id_map,'trees':trees})
+
 
         if 'id_map' in kwargs and 'id' in kwargs and "delete_map" in request.POST:
             id_map = kwargs.get('id_map')
@@ -168,6 +202,24 @@ class InventoryMapView(View):
         else:
             raise Http404("Missing inventory id.")
 
+class TreeOnMapView(View):
+
+    def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            user = request.user
+
+        if 'id' in kwargs and 'id_tree' in kwargs and 'id_map' in kwargs and "delete_tree" in request.POST:
+            id_map = kwargs.get('id_map')
+            id_tree = kwargs.get('id_tree')
+            id = kwargs.get('id')
+            queryset = TreeOnMap.objects.filter(id=id_tree,inventorymap__id = id_map)
+            tree = get_object_or_404(queryset)
+            tree.delete()
+            print('Tree', id_tree,'in map',id_map,' deleted')
+            return HttpResponseRedirect('/inventory/'+str(id)+'/map/'+str(id_map)+'/')
+        else:
+            raise Http404("Something is missing in POST.")
+
 class TreeTrunkDeleteView(View):
     username = None
     def post(self, request, *args, **kwargs):
@@ -188,7 +240,7 @@ class TreeTrunkDeleteView(View):
             print('Tree Trunk deleted')
             return HttpResponseRedirect('/inventory/'+str(id)+'/tree/'+str(tree_obj.id)+'/')
         else:
-            raise Http404("Error")
+            raise Http404("Something is missing in POST.")
 
 class TreeDeleteView(View):
     template_name = "inventory/tree.html"
@@ -208,7 +260,7 @@ class TreeDeleteView(View):
             print('Tree deleted')
             return HttpResponseRedirect('/inventory/'+str(id))
         else:
-            raise Http404("Error")
+            raise Http404("Something is missing in POST.")
 class TreeImageDeleteView(View):
     template_name = "inventory/tree.html"
     username = None
@@ -230,7 +282,7 @@ class TreeImageDeleteView(View):
             print('Tree deleted')
             return HttpResponseRedirect('/inventory/'+str(id)+'/tree/'+str(id_t)+'/')
         else:
-            raise Http404("Error")
+            raise Http404("Something is missing in POST.")
 
 class TreeView(View):
     template_name = "inventory/tree.html"
@@ -336,7 +388,7 @@ class TreeView(View):
             return render(request, self.template_name, {'trunk_form':trunk_form,'trunk_list':trunk_list,'form': form,'image_list':image_list,'inventory':inventory,'id':id,'id_t':id_t})
 
         else:
-            raise Http404("Error.")
+            raise Http404("Something is missing in POST.")
 
 
 class TreeImageView(View):

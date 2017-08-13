@@ -11,7 +11,7 @@ video.id = "video";
 video.autoplay = true;
 // Elements for taking the snapshot
 var canvas = document.createElement('canvas');
-canvas.id = "canvas";
+canvas.id = "canvas_map";
 
 
 
