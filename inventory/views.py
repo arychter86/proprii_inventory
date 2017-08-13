@@ -398,11 +398,11 @@ class TreeImageView(View):
                 full_filename = os.path.join(settings.MEDIA_ROOT, t_img.UPLOAD_TO, filename)
                 #create folder if not exists
                 if not os.path.exists(os.path.dirname(full_filename)):
-                try:
-                    os.makedirs(os.path.dirname(full_filename))
-                except OSError as exc: # Guard against race condition
-                    if exc.errno != errno.EEXIST:
-                        raise
+                    try:
+                        os.makedirs(os.path.dirname(full_filename))
+                    except OSError as exc: # Guard against race condition
+                        if exc.errno != errno.EEXIST:
+                            raise
                 print('Saving image to', full_filename)
                 with open(full_filename,'wb') as f:
                     f.write(image_binary)
