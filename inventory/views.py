@@ -408,7 +408,7 @@ class TreeImageView(View):
                     f.write(image_binary)
                 t_img.picture.name = t_img.UPLOAD_TO+filename
                 t_img.save()
-
+                print('Image saved to', full_filename)
                 #Tutaj nie mozemy przekierowac funkcja HttpResponseRedirect bo uzylismy ajax POST do zdjecia
                 redirect = '/inventory/'+id+'/tree/'+str(tree_obj.id)+'/';
                 response_data = {}
@@ -416,8 +416,8 @@ class TreeImageView(View):
                 response_data['id'] = id
                 response_data['id'] = id_t
                 data = json.dumps(response_data)
-                #return HttpResponse(data, content_type='application/json')
-                raise Http404("Wrong data.")
+                return HttpResponse(data, content_type='application/json')
+
             else:
                 raise Http404("Wrong data.")
 
