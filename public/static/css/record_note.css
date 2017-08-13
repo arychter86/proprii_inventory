@@ -1,13 +1,21 @@
 
-    #headline {
+    #info {
+      margin:0;
+      padding:0;
     text-decoration: none
     }
-    #results {
+    #info>.alert
+    {
+      margin:0;
 
+    }
+    #results {
+    padding:10px;
+    margin:0;
     font-weight: bold;
     border: 1px solid #ddd;
     text-align: left;
-    min-height: 150px;
+    min-height: 60px;
     }
 
     .interim {

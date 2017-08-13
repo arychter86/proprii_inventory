@@ -154,7 +154,7 @@ function setupSnapAndAjaxPost() {
              }
            },
            error: function(xhr, textStatus, errorThrown){
-
+            $('#snap_txt').text(errorThrown);
              console.log(xhr.statusText);
               console.log(textStatus);
               console.log(errorThrown);

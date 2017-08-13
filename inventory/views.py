@@ -167,12 +167,13 @@ class InventoryMapView(View):
                 return HttpResponseRedirect('/inventory/'+str(id)+'/')
         else:
             raise Http404("Missing inventory id.")
+
 class TreeTrunkDeleteView(View):
     username = None
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated():
             username = request.user.username
-        print('Tree Trunk deleted')
+
         if 'id_t' in kwargs and 'id' in kwargs and 'id_tt' in kwargs:
             id = kwargs.get('id')
             id_t = kwargs.get('id_t')
@@ -185,7 +186,9 @@ class TreeTrunkDeleteView(View):
 
             trunk.delete()
             print('Tree Trunk deleted')
-        return HttpResponseRedirect('/inventory/'+str(id)+'/tree/'+str(tree_obj.id)+'/')
+            return HttpResponseRedirect('/inventory/'+str(id)+'/tree/'+str(tree_obj.id)+'/')
+        else:
+            raise Http404("Error")
 
 class TreeDeleteView(View):
     template_name = "inventory/tree.html"
@@ -203,8 +206,9 @@ class TreeDeleteView(View):
             tree_obj = get_object_or_404(queryset, pk=id_t)
             tree_obj.delete()
             print('Tree deleted')
-        return HttpResponseRedirect('/inventory/'+str(id))
-
+            return HttpResponseRedirect('/inventory/'+str(id))
+        else:
+            raise Http404("Error")
 class TreeImageDeleteView(View):
     template_name = "inventory/tree.html"
     username = None
@@ -224,7 +228,9 @@ class TreeImageDeleteView(View):
             image = get_object_or_404(queryset, pk=id_image)
             image.delete()
             print('Tree deleted')
-        return HttpResponseRedirect('/inventory/'+str(id)+'/tree/'+str(id_t)+'/')
+            return HttpResponseRedirect('/inventory/'+str(id)+'/tree/'+str(id_t)+'/')
+        else:
+            raise Http404("Error")
 
 class TreeView(View):
     template_name = "inventory/tree.html"
@@ -252,13 +258,14 @@ class TreeView(View):
                     tree_obj.tree_number = 1
 
             setattr(tree_obj, 'inventory', Inventory.objects.get(id=id))
+            # tree form
+            form = TreeForm(instance=tree_obj)
+            # new trunk form
+            trunk_form = TreeTrunkForm()
+            return render(request, self.template_name, {'trunk_form':trunk_form,'form': form,'id':id,'id_t':id_t})
+
         else:
             raise Http404("Missing inventory or tree id.")
-        # tree form
-        form = TreeForm(instance=tree_obj)
-        # new trunk form
-        trunk_form = TreeTrunkForm()
-        return render(request, self.template_name, {'trunk_form':trunk_form,'form': form,'id':id,'id_t':id_t})
 
     def post(self, request, *args, **kwargs):
 
@@ -302,8 +309,7 @@ class TreeView(View):
                 else:
                     print('Tree form not valid ', form.errors)
 
-
-            if 'add_trunk' in request.POST and id_t != '0':
+            elif 'add_trunk' in request.POST and id_t != '0':
                 trunk_form = TreeTrunkForm(request.POST, request.FILES)
                 queryset = Tree.objects.filter(inventory=inventory)
                 tree_obj = get_object_or_404(queryset, pk=id_t)
@@ -322,12 +328,15 @@ class TreeView(View):
                 # new trunk form
                 trunk_form = TreeTrunkForm()
 
-        #List of images
-        image_list = TreeImage.objects.filter(tree = tree_obj)
-        #List of trunks
-        trunk_list = TreeTrunk.objects.filter(tree = tree_obj)
+            #List of images
+            image_list = TreeImage.objects.filter(tree = tree_obj)
+            #List of trunks
+            trunk_list = TreeTrunk.objects.filter(tree = tree_obj)
 
-        return render(request, self.template_name, {'trunk_form':trunk_form,'trunk_list':trunk_list,'form': form,'image_list':image_list,'inventory':inventory,'id':id,'id_t':id_t})
+            return render(request, self.template_name, {'trunk_form':trunk_form,'trunk_list':trunk_list,'form': form,'image_list':image_list,'inventory':inventory,'id':id,'id_t':id_t})
+
+        else:
+            raise Http404("Error.")
 
 
 class TreeImageView(View):
@@ -337,6 +346,8 @@ class TreeImageView(View):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated():
             user = request.user
+        else:
+            raise Http404("Error.")
 
         if 'id_t' in kwargs and 'id' in kwargs:
             id = kwargs.get('id')
@@ -346,10 +357,11 @@ class TreeImageView(View):
 
             queryset = Tree.objects.filter(inventory=inventory)
             tree_obj = get_object_or_404(queryset, pk=id_t)
+            return render(request, self.template_name, {'tree':tree_obj,'inventory':inventory,'id':id,'id_t':id_t})
         else:
             raise Http404("Missing inventory or tree id.")
 
-        return render(request, self.template_name, {'tree':tree_obj,'inventory':inventory,'id':id,'id_t':id_t})
+
 
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated():
@@ -363,43 +375,45 @@ class TreeImageView(View):
 
             queryset = Tree.objects.filter(inventory=inventory)
             tree_obj = get_object_or_404(queryset, pk=id_t)
+            json_data = json.loads(request.body) # request.raw_post_data w/ Django < 1.4
+            if 'img_base64' in json_data:
+
+                print('Image data for inv ', json_data['id'],' and tree ',json_data['id_t'])
+                try:
+                    data_url = json_data['img_base64']
+                except KeyError:
+                  HttpResponseServerError("Malformed data!")
+
+                content = data_url.split(';')[1]
+                image_encoded = content.split(',')[1]
+                image_binary = base64.decodebytes(image_encoded.encode('utf-8'))
+
+                # create new image in DB
+                t_img = TreeImage()
+                t_img.author = user
+                t_img.tree = tree_obj
+                t_img.description = 'img'
+                t_img.save(force_insert=True)
+                filename = 'tree_'+str(tree_obj.id)+'_image_'+str(t_img.id)+'.jpeg'
+                full_filename = os.path.join(settings.MEDIA_ROOT, t_img.UPLOAD_TO, filename)
+                print('Saving image to', full_filename)
+                with open(full_filename,'wb') as f:
+                    f.write(image_binary)
+                t_img.picture.name = t_img.UPLOAD_TO+filename
+                t_img.save()
+
+                #Tutaj nie mozemy przekierowac funkcja HttpResponseRedirect bo uzylismy ajax POST do zdjecia
+                redirect = '/inventory/'+id+'/tree/'+str(tree_obj.id)+'/';
+                response_data = {}
+                response_data['redirect'] =redirect
+                response_data['id'] = id
+                response_data['id'] = id_t
+                data = json.dumps(response_data)
+                #return HttpResponse(data, content_type='application/json')
+                raise Http404("Wrong data.")
+            else:
+                raise Http404("Wrong data.")
+
 
         else:
             raise Http404("Missing inventory or tree id.")
-
-        json_data = json.loads(request.body) # request.raw_post_data w/ Django < 1.4
-        if 'img_base64' in json_data:
-
-            print('Image data for inv ', json_data['id'],' and tree ',json_data['id_t'])
-            try:
-                data_url = json_data['img_base64']
-            except KeyError:
-              HttpResponseServerError("Malformed data!")
-
-            content = data_url.split(';')[1]
-            image_encoded = content.split(',')[1]
-            image_binary = base64.decodebytes(image_encoded.encode('utf-8'))
-
-            # create new image in DB
-            t_img = TreeImage()
-            t_img.author = user
-            t_img.tree = tree_obj
-            t_img.description = 'img'
-            t_img.save(force_insert=True)
-            filename = 'tree_'+str(tree_obj.id)+'_image_'+str(t_img.id)+'.jpeg'
-            full_filename = os.path.join(settings.MEDIA_ROOT, t_img.UPLOAD_TO, filename)
-            print('Saving image to', full_filename)
-            with open(full_filename,'wb') as f:
-                f.write(image_binary)
-            t_img.picture.name = t_img.UPLOAD_TO+filename
-            t_img.save()
-        else:
-            raise Http404("Wrong data.")
-        #return HttpResponseRedirect('/inventory/'+id+'/tree/'+str(tree_obj.id)+'/')
-        redirect = '/inventory/'+id+'/tree/'+str(tree_obj.id)+'/';
-        response_data = {}
-        response_data['redirect'] =redirect
-        response_data['id'] = id
-        response_data['id'] = id_t
-        data = json.dumps(response_data)
-        return HttpResponse(data, content_type='application/json')

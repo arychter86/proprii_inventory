@@ -16,10 +16,10 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 */
-
+var window = self;
 (function(window){
 
-  var WORKER_PATH = 'js/recorderjs/recorderWorker.js';
+
 
   var Recorder = function(source, cfg){
     var config = cfg || {};

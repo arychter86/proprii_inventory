@@ -1,6 +1,6 @@
 .page-header {
     background-color: #666666;
-    margin-top: 0;
+    margin: 5;
 
 }
 
@@ -9,16 +9,34 @@
     font-size: 36pt;
     text-decoration: none;
 }
+.nopadding {
+   padding: 0 !important;
+   margin: 0 !important;
+}
+.nomargin {
+   margin: 0 !important;
+}
+.padding-5 {
+   padding: 5px !important;
+}
+.margin-5 {
+   margin: 5px !important;
+}
+.container {
+    padding-right: 2px;
+    padding-left: 2px;
+    /* margin-right: auto; */
+    /* margin-left: auto; */
+}
 
 .table {
 	table-layout:fixed;
 }
 
-.table td {
+.table td, .td_div, .no-overflow {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-
 }
 
 .date {
