@@ -73,13 +73,13 @@
           if (delta) zoom(delta);
           return evt.preventDefault() && false;
       };
-
+			/*
 			var handleTouchStart=  function(evt) {
 			  // Handle zoom only if 2 fingers are touching the screen
 
 
 				if ( evt.touches.length == 2) {
-				
+
 				 // Get event point
 				 distStart =Math.sqrt((evt.touches[0].x-evt.touches[1].x) * (evt.touches[0].x-evt.touches[1].x) +(evt.touches[0].y-evt.touches[1].y) * (evt.touches[0].y-evt.touches[1].y));
 				 // Calculate delta from start scale
@@ -103,8 +103,25 @@
 
 			 }
 			}
-	    canvas.addEventListener('touchstart', handleTouchStart, false);
-			canvas.addEventListener('touchend', handleTouchEnd, false);
+			*/
+			$('body').on("touchstart touchmove touchend",'#canvas_map', function(e){
+				window.alert('GESTURE ');
+			    if(e.originalEvent.touches.length > 1)
+			        return;
+			    /* your touch code here */
+			});
+
+			$('.body').on("gesturechange gestureend",'#canvas_map', function(e){
+
+		 		e.preventDefault();
+        scale = e.scale;
+				if (scale) zoom(scale);
+					return false;
+
+	 		});
+
+	    //canvas.addEventListener('touchstart', handleTouchStart, false);
+			//canvas.addEventListener('touchend', handleTouchEnd, false);
 
       canvas.addEventListener('DOMMouseScroll',handleScroll, false);
       canvas.addEventListener('mousewheel',handleScroll, {passive: false});
