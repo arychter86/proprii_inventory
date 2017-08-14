@@ -7,6 +7,15 @@
 	var distStart = 0;
 	map_img.src = image_src;
 
+	// elementy do rejestracji gesture
+	var mc = new Hammer.Manager(canvas);
+
+	// create a pinch
+	var pinch = new Hammer.Pinch();
+	mc.add([pinch]);
+
+
+
 
 
 	window.onresize = function() {
@@ -104,21 +113,14 @@
 			 }
 			}
 			*/
-			$('body').on("touchstart touchmove touchend",'#canvas_map', function(e){
 
-			    if(e.originalEvent.touches.length > 1)
-			        return;
-			    /* your touch code here */
-			});
-
-			$('body').on("gesturechange gestureend",'#canvas_map', function(e){
+			mc.on("pinch", function(ev) {
 				window.alert('GESTURE ');
-		 		e.preventDefault();
-        scale = e.scale;
-				if (scale) zoom(scale);
+				e.preventDefault();
+				scale = e.scale;
+				if (scale) zoom(1.2);
 					return false;
-
-	 		});
+			});
 
 	    //canvas.addEventListener('touchstart', handleTouchStart, false);
 			//canvas.addEventListener('touchend', handleTouchEnd, false);
