@@ -125,7 +125,7 @@
 
 			mc.on("pinch", function(evt) {
 				evt.preventDefault();
-				scale = Math.pow(evt.scale,1/8);
+				scale = Math.pow(evt.scale,1/20);
 				var pt = ctx.transformedPoint(lastX,lastY);
 				ctx.translate(pt.x,pt.y);
 				ctx.scale(scale,scale);
