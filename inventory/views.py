@@ -161,7 +161,7 @@ class InventoryMapView(View):
             if tree_form.is_valid():
                 print('Adding new tree on map')
                 treeonmap = tree_form.save(commit=False)
-
+                setattr(treeonmap, 'tree_number', tree_form.instance.tree.tree_number)
                 setattr(treeonmap, 'inventorymap', inventorymap)
 
                 treeonmap.save()

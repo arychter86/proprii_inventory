@@ -61,7 +61,7 @@ class Tree(models.Model):
     created_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return str(self.id) + ": " + self.name
+        return str(self.tree_number) + ": " + self.name
 
 
 
@@ -87,6 +87,7 @@ class TreeFormSmall(forms.ModelForm):
 class TreeOnMap(models.Model):
     inventorymap = models.ForeignKey('InventoryMap', related_name = 'treesonmap')
     tree = models.ForeignKey('Tree')
+    tree_number = models.IntegerField(default=0, validators=[validate_postive_int])
     x_pos = models.IntegerField(default=0, validators=[validate_postive_int])
     y_pos = models.IntegerField(default=0, validators=[validate_postive_int])
     radius = models.IntegerField(default=10, validators=[validate_postive_int])

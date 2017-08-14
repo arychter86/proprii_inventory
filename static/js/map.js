@@ -2,10 +2,11 @@
 	var canvas = document.getElementById('canvas_map')
 	var canvas_parent = document.getElementById('canvas_parent')
 	var ctx = canvas.getContext('2d');
-
+	var radius_input = document.getElementById('id_radius')
 	var map_img = new Image();
 	var distStart = 0;
 	map_img.src = image_src;
+
 
 	// elementy do rejestracji gesture
 	var mc = new Hammer.Manager(canvas);
@@ -14,12 +15,15 @@
 	var pinch = new Hammer.Pinch();
 	mc.add([pinch]);
 
+	// create a pinch
+	var pan = new Hammer.Pan();
+	mc.add([pan]);
+	mc.get('pan').set({ direction: Hammer.DIRECTION_ALL });
 
-
-
+	// Tap recognizer with minimal 2 taps
+	//mc.add( new Hammer.Tap({ event: 'doubletap', taps: 2 }) );
 
 	window.onresize = function() {
-
 		on_load();
 	}
 
@@ -31,23 +35,55 @@
 		canvas.width = canvas_parent.offsetWidth;
 		canvas.height = canvas.width;
 
-		    trackTransforms(ctx);
+	    trackTransforms(ctx);
 
-        redraw();
+      redraw();
 
       var lastX=canvas.width/2, lastY=canvas.height/2;
 
       var dragStart,dragged;
+			var panStart,panned;
 
-      canvas.addEventListener('mousedown',function(evt){
-          document.body.style.mozUserSelect = document.body.style.webkitUserSelect = document.body.style.userSelect = 'none';
-          lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
-          lastY = evt.offsetY || (evt.pageY - canvas.offsetTop);
-          dragStart = ctx.transformedPoint(lastX,lastY);
-          dragged = false;
-           set_coordinates(event);
-      },false);
 
+			canvas.addEventListener("dblclick", function(evt) {
+				console.log("double cick");
+				redraw();
+				coordinates = set_coordinates(evt);
+				lastX = coordinates[0];
+				lastY = coordinates[1];
+				radius = radius_input.value;
+				ctx.beginPath();
+				ctx.arc(lastX, lastY, radius, 0, 2 * Math.PI, false);
+				ctx.strokeStyle = 'red';
+				ctx.stroke();
+
+
+			},false);
+
+
+			mc.on("pan", function(evt) {
+				console.log("doubletap",evt.changedPointers[0])
+				evt = evt.changedPointers[0];
+
+				//document.body.style.mozUserSelect = document.body.style.webkitUserSelect = document.body.style.userSelect = 'none';
+				lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
+				lastY = evt.offsetY || (evt.pageY - canvas.offsetTop);
+				panStart = ctx.transformedPoint(lastX,lastY);
+				panned = false;
+			},false);
+
+			mc.on("panmove", function(evt) {
+				evt = evt.changedPointers[0];
+				lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
+				lastY = evt.offsetY || (evt.pageY - canvas.offsetTop);
+				panned = true;
+				if (panStart){
+					var pt = ctx.transformedPoint(lastX,lastY);
+					ctx.translate(pt.x-panStart.x,pt.y-panStart.y);
+					redraw();
+					}
+			},false);
+			/*
       canvas.addEventListener('mousemove',function(evt){
           lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
           lastY = evt.offsetY || (evt.pageY - canvas.offsetTop);
@@ -58,10 +94,13 @@
             redraw();
                 }
       },false);
+			*/
+			mc.on("panend", function(evt) {
+		   	  panStart = null;
+			},false);
 
       canvas.addEventListener('mouseup',function(evt){
-          dragStart = null;
-
+          //dragStart = null;
       },false);
 
       var scaleFactor = 1.1;
@@ -85,13 +124,10 @@
 
 
 			mc.on("pinch", function(evt) {
-
 				evt.preventDefault();
-				scale = Math.pow(evt.scale,1/6);
+				scale = Math.pow(evt.scale,1/8);
 				var pt = ctx.transformedPoint(lastX,lastY);
 				ctx.translate(pt.x,pt.y);
-
-
 				ctx.scale(scale,scale);
 				ctx.translate(-pt.x,-pt.y);
 				redraw();
@@ -107,7 +143,7 @@
       function set_coordinates(evt) {
 
 				m = ctx.getTransform();
-				console.log(m.a);
+
         var mouseX = (evt.offsetX || (evt.pageX - canvas.offsetLeft));
         var mouseY = (evt.offsetY || (evt.pageY - canvas.offsetLeft));
         newX = parseInt((mouseX   - m.e)/ m.a);
@@ -124,6 +160,7 @@
 				}
         $("#id_x_pos").val(newX);
         $("#id_y_pos").val(newY);
+				return [newX, newY];
       }
 
 			start_scale = canvas.width/map_img.width;
@@ -153,11 +190,14 @@
 	          ctx.drawImage(map_img,0,0);
 	          for (i = 0; i < trees.length; i++) {
 	            var tree = trees[i];
-
+							console.log(tree)
 	            ctx.beginPath();
 	            ctx.arc(tree.fields.x_pos, tree.fields.y_pos, tree.fields.radius, 0, 2 * Math.PI, false);
-	            ctx.fillStyle = 'green';
-	            ctx.fill();
+							ctx.strokeStyle = 'green';
+ 		 					ctx.stroke();
+							ctx.font= tree.fields.radius+"px Georgia";
+							ctx.fillText(tree.fields.tree_number,tree.fields.x_pos,tree.fields.y_pos);
+
 	          }
 
 

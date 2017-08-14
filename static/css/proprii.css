@@ -4,7 +4,7 @@
 
 }
 
-#canvas_map { display:block; margin:1em auto; background:#fff; border:1px solid #ccc }
+#canvas_map { display:block; margin:1em auto; background:#fff; border:1px solid #ccc;}
 
 .page-header h1, .page-header h1 a, .page-header h1 a:visited, .page-header h1 a:active {
     color: #fff;
