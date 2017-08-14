@@ -4,7 +4,7 @@
 	var ctx = canvas.getContext('2d');
 
 	var map_img = new Image();
-
+	var distStart = 0;
 	map_img.src = image_src;
 
 
@@ -73,7 +73,7 @@
           if (delta) zoom(delta);
           return evt.preventDefault() && false;
       };
-			var distStart = 0;
+
 			var handleTouchStart=  function(evt) {
 			  // Handle zoom only if 2 fingers are touching the screen
 				console.log('start')
