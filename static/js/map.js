@@ -76,7 +76,7 @@
 			var distStart = 0;
 			var handleTouchStart=  function(evt) {
 			  // Handle zoom only if 2 fingers are touching the screen
-
+				console.log('start')
 				if ( evt.targetTouches.length == 2) {
 
 				 // Get event point
@@ -85,9 +85,9 @@
 
 			 }
 			}
-			var handleTouchStop=  function(evt) {
+			var handleTouchEnd=  function(evt) {
 			  // Handle zoom only if 2 fingers are touching the screen
-
+				console.log('stop')
 				if ( evt.targetTouches.length == 2) {
 
 				 // Get event point
@@ -101,8 +101,8 @@
 			 }
 			}
 	    canvas.addEventListener('touchstart', handleTouchStart, false);
-			canvas.addEventListener('touchstop', handleTouchStop, false);
-	
+			canvas.addEventListener('touchend', handleTouchEnd, false);
+
       canvas.addEventListener('DOMMouseScroll',handleScroll, false);
       canvas.addEventListener('mousewheel',handleScroll, {passive: false});
 
