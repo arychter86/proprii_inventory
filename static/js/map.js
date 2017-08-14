@@ -114,10 +114,10 @@
 			}
 			*/
 
-			mc.on("pinch", function(ev) {
-				//window.alert('GESTURE ');
-				e.preventDefault();
-				scale = e.scale;
+			mc.on("pinch", function(evt) {
+				window.alert('GESTURE ' );
+				evt.preventDefault();
+				scale = evt.scale;
 				if (scale) zoom(scale);
 					return false;
 			});
