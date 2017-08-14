@@ -115,10 +115,10 @@
 			*/
 
 			mc.on("pinch", function(ev) {
-				window.alert('GESTURE ');
+				//window.alert('GESTURE ');
 				e.preventDefault();
 				scale = e.scale;
-				if (scale) zoom(1.2);
+				if (scale) zoom(scale);
 					return false;
 			});
 
