@@ -88,7 +88,13 @@
 
 				evt.preventDefault();
 				scale = evt.scale;
-				if (scale) zoom(1);
+				var pt = ctx.transformedPoint(lastX,lastY);
+				ctx.translate(pt.x,pt.y);
+
+
+				ctx.scale(scale,scale);
+				ctx.translate(-pt.x,-pt.y);
+				redraw();
 					return false;
 			});
 
