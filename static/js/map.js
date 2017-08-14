@@ -82,43 +82,13 @@
           if (delta) zoom(delta);
           return evt.preventDefault() && false;
       };
-			/*
-			var handleTouchStart=  function(evt) {
-			  // Handle zoom only if 2 fingers are touching the screen
 
-
-				if ( evt.touches.length == 2) {
-
-				 // Get event point
-				 distStart =Math.sqrt((evt.touches[0].x-evt.touches[1].x) * (evt.touches[0].x-evt.touches[1].x) +(evt.touches[0].y-evt.touches[1].y) * (evt.touches[0].y-evt.touches[1].y));
-				 // Calculate delta from start scale
-
-			 }
-			}
-			var handleTouchEnd=  function(evt) {
-			  // Handle zoom only if 2 fingers are touching the screen
-
-
-				if ( evt.touches.length == 2) {
-					window.alert('stop ' +  evt.touches.length);
-				 // Get event point
-				 var distStop =Math.sqrt((evt.touches[0].x-evt.touches[1].x) * (evt.touches[0].x-evt.touches[1].x) +(evt.touches[0].y-evt.touches[1].y) * (evt.touches[0].y-evt.touches[1].y));
-				 delta = distStop-distStart;
-				 // Calculate delta from start scale
-				 window.alert(delta);
-				 if (delta>0) zoom(1.2);
-				 if (delta<0) zoom(-1.2);
-					 return evt.preventDefault() && false;
-
-			 }
-			}
-			*/
 
 			mc.on("pinch", function(evt) {
-			
+
 				evt.preventDefault();
 				scale = evt.scale;
-				if (scale) zoom(scale);
+				if (scale) zoom(1);
 					return false;
 			});
 
