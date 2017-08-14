@@ -94,6 +94,7 @@
 				 var distStop =Math.sqrt((evt.touches[0].x-evt.touches[1].x) * (evt.touches[0].x-evt.touches[1].x) +(evt.touches[0].y-evt.touches[1].y) * (evt.touches[0].y-evt.touches[1].y));
 				 delta = distStop-distStart;
 				 // Calculate delta from start scale
+				 window.alert(delta);
 				 if (delta>0) zoom(1.2);
 				 if (delta<0) zoom(-1.2);
 					 return evt.preventDefault() && false;
