@@ -82,15 +82,15 @@
 			    // Remember canvas scale at gesture start
 
 			    // Calculate delta from start scale
-			    var delta = zoomStartScale * evt.self.scale;
+			    var delta =  evt.self.scale;
 			    // Zoom to pinch point
-					var delta = evt.wheelDelta ? evt.wheelDelta/40 : evt.detail ? -evt.detail : 0;
+
 					if (delta) zoom(delta);
 			  }
 			}
 
 	    canvas.addEventListener('touchmove', handleTouch, false);
-	    
+
       canvas.addEventListener('DOMMouseScroll',handleScroll, false);
       canvas.addEventListener('mousewheel',handleScroll, {passive: false});
 
