@@ -3,7 +3,6 @@ __pycache__
 myvenv
 db.sqlite3
 .DS_Store
-static
 media
 
 # Byte-compiled / optimized / DLL files
