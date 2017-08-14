@@ -111,7 +111,7 @@
 			    /* your touch code here */
 			});
 
-			$('.body').on("gesturechange gestureend",'#canvas_map', function(e){
+			$('body').on("gesturechange gestureend",'#canvas_map', function(e){
 				window.alert('GESTURE ');
 		 		e.preventDefault();
         scale = e.scale;
