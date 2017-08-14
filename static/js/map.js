@@ -76,7 +76,10 @@
 
 			var handleTouch=  function(evt) {
 			  // Handle zoom only if 2 fingers are touching the screen
-			  if (evt.e.touches && evt.e.touches.length == 2) {
+
+				console.log('TOuch multi');
+			  if (evt.touches && evt.touches.length == 2) {
+					console.log('TOuch multi');
 			    // Get event point
 			    var point = new fabric.Point(evt.self.x, evt.self.y);
 			    // Remember canvas scale at gesture start
@@ -86,6 +89,8 @@
 			    // Zoom to pinch point
 
 					if (delta) zoom(delta);
+
+					evt.preventDefault();
 			  }
 			}
 
