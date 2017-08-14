@@ -74,23 +74,23 @@
           return evt.preventDefault() && false;
       };
 
-			var handleTouch=  function(event) {
+			var handleTouch=  function(evt) {
 			  // Handle zoom only if 2 fingers are touching the screen
-			  if (event.e.touches && event.e.touches.length == 2) {
+			  if (evt.e.touches && evt.e.touches.length == 2) {
 			    // Get event point
-			    var point = new fabric.Point(event.self.x, event.self.y);
+			    var point = new fabric.Point(evt.self.x, evt.self.y);
 			    // Remember canvas scale at gesture start
-			    if (event.self.state == "start") {
-			      zoomStartScale = self.canvas.getZoom();
-			    }
+
 			    // Calculate delta from start scale
-			    var delta = zoomStartScale * event.self.scale;
+			    var delta = zoomStartScale * evt.self.scale;
 			    // Zoom to pinch point
 					var delta = evt.wheelDelta ? evt.wheelDelta/40 : evt.detail ? -evt.detail : 0;
 					if (delta) zoom(delta);
 			  }
 			}
-					canvas.addEventListener("touchmove",handleTouch, false);
+
+	    canvas.addEventListener('touchmove', handleTouch, false);
+	    
       canvas.addEventListener('DOMMouseScroll',handleScroll, false);
       canvas.addEventListener('mousewheel',handleScroll, {passive: false});
 
