@@ -105,14 +105,14 @@
 			}
 			*/
 			$('body').on("touchstart touchmove touchend",'#canvas_map', function(e){
-				window.alert('GESTURE ');
+
 			    if(e.originalEvent.touches.length > 1)
 			        return;
 			    /* your touch code here */
 			});
 
 			$('.body').on("gesturechange gestureend",'#canvas_map', function(e){
-
+				window.alert('GESTURE ');
 		 		e.preventDefault();
         scale = e.scale;
 				if (scale) zoom(scale);
