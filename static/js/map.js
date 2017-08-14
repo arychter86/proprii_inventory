@@ -73,29 +73,36 @@
           if (delta) zoom(delta);
           return evt.preventDefault() && false;
       };
-
-			var handleTouch=  function(evt) {
+			var distStart = 0;
+			var handleTouchStart=  function(evt) {
 			  // Handle zoom only if 2 fingers are touching the screen
 
-				console.log('Touch multi',evt.touches.length);
-			  if ( evt.targetTouches.length == 2) {
+				if ( evt.targetTouches.length == 2) {
 
-			    // Get event point
-			    var point = new fabric.Point(evt.self.x, evt.self.y);
-			    // Remember canvas scale at gesture start
+				 // Get event point
+				 distStart =Math.sqrt((evt.touches[0].x-evt.touches[1].x) * (evt.touches[0].x-evt.touches[1].x) +(evt.touches[0].y-evt.touches[1].y) * (evt.touches[0].y-evt.touches[1].y));
+				 // Calculate delta from start scale
 
-			    // Calculate delta from start scale
-			    var delta =  1.2;
-			    // Zoom to pinch point
-
-					if (delta) zoom(delta);
-
-					  return evt.preventDefault() && false;
-			  }
+			 }
 			}
+			var handleTouchStop=  function(evt) {
+			  // Handle zoom only if 2 fingers are touching the screen
 
-	    canvas.addEventListener('touchmove', handleTouch, false);
+				if ( evt.targetTouches.length == 2) {
 
+				 // Get event point
+				 var distStop =Math.sqrt((evt.touches[0].x-evt.touches[1].x) * (evt.touches[0].x-evt.touches[1].x) +(evt.touches[0].y-evt.touches[1].y) * (evt.touches[0].y-evt.touches[1].y));
+				 delta = distStop-distStart;
+				 // Calculate delta from start scale
+				 if (delta>0) zoom(1.2);
+				 if (delta<0) zoom(-1.2);
+					 return evt.preventDefault() && false;
+
+			 }
+			}
+	    canvas.addEventListener('touchstart', handleTouchStart, false);
+			canvas.addEventListener('touchstop', handleTouchStop, false);
+	
       canvas.addEventListener('DOMMouseScroll',handleScroll, false);
       canvas.addEventListener('mousewheel',handleScroll, {passive: false});
 
