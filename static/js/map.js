@@ -87,7 +87,7 @@
 			    // Remember canvas scale at gesture start
 
 			    // Calculate delta from start scale
-			    var delta =  evt.self.scale;
+			    var delta =  1.2;
 			    // Zoom to pinch point
 
 					if (delta) zoom(delta);
