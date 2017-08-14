@@ -77,7 +77,7 @@
 			var handleTouchStart=  function(evt) {
 			  // Handle zoom only if 2 fingers are touching the screen
 				console.log('start')
-				if ( evt.targetTouches.length == 2) {
+				if ( evt.touches.length == 2) {
 
 				 // Get event point
 				 distStart =Math.sqrt((evt.touches[0].x-evt.touches[1].x) * (evt.touches[0].x-evt.touches[1].x) +(evt.touches[0].y-evt.touches[1].y) * (evt.touches[0].y-evt.touches[1].y));
@@ -88,8 +88,8 @@
 			var handleTouchEnd=  function(evt) {
 			  // Handle zoom only if 2 fingers are touching the screen
 				console.log('stop')
-				window.alert('stop',  evt.targetTouches.length);
-				if ( evt.targetTouches.length == 2) {
+				window.alert('stop',  evt.touches.length);
+				if ( evt.touches.length == 2) {
 
 				 // Get event point
 				 var distStop =Math.sqrt((evt.touches[0].x-evt.touches[1].x) * (evt.touches[0].x-evt.touches[1].x) +(evt.touches[0].y-evt.touches[1].y) * (evt.touches[0].y-evt.touches[1].y));
