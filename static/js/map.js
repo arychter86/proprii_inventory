@@ -76,7 +76,8 @@
 
 			var handleTouchStart=  function(evt) {
 			  // Handle zoom only if 2 fingers are touching the screen
-				console.log('start')
+
+				window.alert('start ' +  evt.touches.length);
 				if ( evt.touches.length == 2) {
 
 				 // Get event point
@@ -87,8 +88,8 @@
 			}
 			var handleTouchEnd=  function(evt) {
 			  // Handle zoom only if 2 fingers are touching the screen
-				console.log('stop')
-				window.alert('stop',  evt.touches.length);
+
+				window.alert('stop ' +  evt.touches.length);
 				if ( evt.touches.length == 2) {
 
 				 // Get event point
