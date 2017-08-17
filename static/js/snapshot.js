@@ -36,7 +36,7 @@ $.ajaxSetup({
  if (hasGetUserMedia()) {
 
    navigator.mediaDevices.enumerateDevices()
-       .then(gotDevices).then(getStream).catch(handleError);
+       .then(gotDevices).then(getStream).catch(errorCallback);
 
   videoSelect.onchange = getStream;
 
@@ -95,7 +95,7 @@ $.ajaxSetup({
    var constraints = {video: {facingMode: "environment"}}
    navigator.mediaDevices.getUserMedia(constraints)
    navigator.mediaDevices.getUserMedia(constraints_hd).
-       then(gotStream).catch(handleError);
+       then(gotStream).catch(errorCallback);
 
  }
 
@@ -106,13 +106,8 @@ $.ajaxSetup({
 
  }
 
- function handleError(error) {
-   console.log('Error: ', error);
-     $('#snap_txt').text("Camera not avaliable...");
- }
-
  var errorCallback = function(e) {
-     $('#snap_txt').text("Can't connect to media");
+     $('#snap_txt').text("Can't connect to media", e);
     console.log('Reeeejected!', e);
   };
 
