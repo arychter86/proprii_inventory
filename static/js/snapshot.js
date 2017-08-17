@@ -107,7 +107,7 @@ $.ajaxSetup({
  }
 
  var errorCallback = function(e) {
-     $('#snap_txt').text("Can't connect to media", e);
+     $('#snap_txt').text("Can't connect to media" + e);
     console.log('Reeeejected!', e);
   };
 
