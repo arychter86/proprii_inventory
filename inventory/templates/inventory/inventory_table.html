@@ -8,8 +8,16 @@
   <title>Inventory Table</title>
   <meta name="description" content="The HTML5 Herald">
   <meta name="author" content="SitePoint">
+  {% load staticfiles%}
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="{% static 'css/proprii.css' %}">
 
-  <link rel="stylesheet" href="css/styles.css?v=1.0">
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  <!-- Latest compiled JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
   <!--[if lt IE 9]>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
@@ -17,10 +25,9 @@
 </head>
 
 <body>
-
-  <form method="post" action="">
+  <div class="container">
     {{ formset.management_form }} {{ formset.non_form_errors.as_ul }}
-    <table id="formset" class="form">
+    <table class=" table table-striped">
       {% for form in formset.forms %} {% if forloop.first %}
       <thead>
         <tr>
@@ -33,20 +40,19 @@
       <tr>
         {% for field in form.visible_fields %}
         <td>
-          {# Include the hidden fields in the form #}
-          {% if forloop.first %}
-            {% for hidden in form.hidden_fields %}
-              {{ hidden }}
-            {% endfor %}
-          {% endif %}
-          {{ field.errors.as_ul }}
-          {{ field.value }}
+          {# Include the hidden fields in the form #} {% if forloop.first %} {% for hidden in form.hidden_fields %} {{ hidden }} {% endfor %} {% endif %} {{ field.errors.as_ul }} {{ field.value }}
         </td>
         {% endfor %}
+        <td>
+          {% for trunk in form.instance.trunks.all %}
+            {{ trunk.trunk_cm }} @ {{ trunk.meas_height_cm }} <br>
+          {% endfor %}
+        </td>
       </tr>
       {% endfor %}
     </table>
     <a href="\inventory\{{inventory.id}}\csv\" download="filename.csv">Save</a>
+  </div>
 </body>
 
 </html>

@@ -90,7 +90,6 @@ class InventoryView(View):
 
 class InventoryCsvView(View):
     template_name = 'inventory/inventory_table.html'
-    username = None
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated():
@@ -115,7 +114,6 @@ class InventoryCsvView(View):
 
 class InventoryTableView(View):
     template_name = 'inventory/inventory_table.html'
-    username = None
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated():
@@ -221,7 +219,6 @@ class TreeOnMapView(View):
             raise Http404("Something is missing in POST.")
 
 class TreeTrunkDeleteView(View):
-    username = None
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated():
             username = request.user.username
@@ -244,7 +241,6 @@ class TreeTrunkDeleteView(View):
 
 class TreeDeleteView(View):
     template_name = "inventory/tree.html"
-    username = None
 
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated():
@@ -263,7 +259,6 @@ class TreeDeleteView(View):
             raise Http404("Something is missing in POST.")
 class TreeImageDeleteView(View):
     template_name = "inventory/tree.html"
-    username = None
 
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated():

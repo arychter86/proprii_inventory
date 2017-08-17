@@ -5,30 +5,32 @@
 	var radius_input = document.getElementById('id_radius')
 	var map_img = new Image();
 	var distStart = 0;
+	var MIN_SCALE = 0.05;
 	map_img.src = image_src;
-
-
+	var options = {
+	  preventDefault: false
+	};
 	// elementy do rejestracji gesture
-	var mc = new Hammer.Manager(canvas);
-
+	//var mc = new Hammer.Manager(canvas,options);
+	var mc = new Hammer(canvas,options);
 	// create a pinch
 	var pinch = new Hammer.Pinch();
-	mc.add([pinch]);
-
-	// create a pinch
 	var pan = new Hammer.Pan();
-	mc.add([pan]);
+	var press = new Hammer.Press();
+	mc.add([pinch, pan, press]);
 	mc.get('pan').set({ direction: Hammer.DIRECTION_ALL });
-
-	// Tap recognizer with minimal 2 taps
-	//mc.add( new Hammer.Tap({ event: 'doubletap', taps: 2 }) );
+	mc.get('press').set({
+        time: 500,
+        pointers: 1,
+        threshold: 10
+    });
 
 	window.onresize = function() {
 		on_load();
 	}
-
-	window.onload = on_load();
-
+	window.onload = function() {
+		on_load();
+	}
 	function on_load(){
 		//initial scale canvas.width/map_img.clientWidth;
 
@@ -44,9 +46,8 @@
       var dragStart,dragged;
 			var panStart,panned;
 
-
-			canvas.addEventListener("dblclick", function(evt) {
-				console.log("double cick");
+			canvas.addEventListener("mousedown", function(evt) {
+				console.log("Drawing temp tree");
 				redraw();
 				coordinates = set_coordinates(evt);
 				lastX = coordinates[0];
@@ -61,8 +62,8 @@
 			},false);
 
 
-			mc.on("pan", function(evt) {
-				console.log("doubletap",evt.changedPointers[0])
+			mc.on("panstart", function(evt) {
+				console.log("Press",evt.changedPointers[0])
 				evt = evt.changedPointers[0];
 
 				//document.body.style.mozUserSelect = document.body.style.webkitUserSelect = document.body.style.userSelect = 'none';
@@ -124,7 +125,7 @@
 
 
 			mc.on("pinch", function(evt) {
-				evt.preventDefault();
+				//evt.preventDefault();
 				scale = Math.pow(evt.scale,1/20);
 				var pt = ctx.transformedPoint(lastX,lastY);
 				ctx.translate(pt.x,pt.y);
@@ -190,7 +191,7 @@
 	          ctx.drawImage(map_img,0,0);
 	          for (i = 0; i < trees.length; i++) {
 	            var tree = trees[i];
-							console.log(tree)
+							//console.log(tree)
 	            ctx.beginPath();
 	            ctx.arc(tree.fields.x_pos, tree.fields.y_pos, tree.fields.radius, 0, 2 * Math.PI, false);
 							ctx.strokeStyle = 'green';
