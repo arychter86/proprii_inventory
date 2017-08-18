@@ -92,8 +92,8 @@ $.ajaxSetup({
      }
    };
 
-   var constraints = {video: {facingMode: "environment"}}
-   navigator.mediaDevices.getUserMedia(constraints)
+   //var constraints = {video: {facingMode: "environment"}}
+   //navigator.mediaDevices.getUserMedia(constraints)
    navigator.mediaDevices.getUserMedia(constraints_hd).
        then(gotStream).catch(errorCallback);
 
