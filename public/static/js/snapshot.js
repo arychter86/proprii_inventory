@@ -78,15 +78,11 @@ $.ajaxSetup({
 
    var constraints = {
      video: {
-       facingMode: { exact: "environment" },
-       {minWidth: 320},
-         {minWidth: 640},
-         {minWidth: 1024},
-         {minWidth: 1280},
-         {minWidth: 1920},
-         {minWidth: 2560},
+        facingMode: { exact: "environment" },
+       width: { min: 1024, ideal: 1280, max: 1920 },
+       height: { min: 576, ideal: 720, max: 1080 },
+   }
 
-     }
    };
 
    navigator.mediaDevices.getUserMedia(constraints).
