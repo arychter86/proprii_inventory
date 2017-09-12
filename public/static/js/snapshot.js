@@ -79,7 +79,12 @@ $.ajaxSetup({
    var constraints = {
      video: {
        facingMode: { exact: "environment" },
-       height: { ideal: 1200}
+       {minWidth: 320},
+         {minWidth: 640},
+         {minWidth: 1024},
+         {minWidth: 1280},
+         {minWidth: 1920},
+         {minWidth: 2560},
 
      }
    };
