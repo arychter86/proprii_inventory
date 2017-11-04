@@ -379,7 +379,8 @@ class TreeView(View):
             image_list = TreeImage.objects.filter(tree = tree_obj)
             #List of trunks
             trunk_list = TreeTrunk.objects.filter(tree = tree_obj)
-
+            # new trunk form
+            trunk_form = TreeTrunkForm()
             return render(request, self.template_name, {'trunk_form':trunk_form,'trunk_list':trunk_list,'form': form,'image_list':image_list,'inventory':inventory,'id':id,'id_t':id_t})
 
         else:
